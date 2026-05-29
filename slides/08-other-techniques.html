@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Other Key Techniques</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:28px; flex-shrink:0; }
+
+  .timeline { display:flex; align-items:center; margin-bottom:24px; flex-shrink:0; }
+  .titem { display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; min-width:130px; }
+  .tyear { font-size:18px; font-weight:700; color:var(--text-3); }
+  .tdot  { width:14px; height:14px; border-radius:50%; background:var(--accent); }
+  .tdot.big { width:20px; height:20px; box-shadow:0 0 0 4px var(--accent-lo); }
+  .tname { font-size:22px; font-weight:800; color:var(--text-1); text-align:center; }
+  .tline { flex:1; height:2px; background:var(--border-hi); margin:0 6px 18px; }
+
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; flex:1; }
+
+  .tcard { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:28px 30px; display:flex; flex-direction:column; gap:10px; }
+  .tc-header { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .tc-name   { font-size:30px; font-weight:800; color:var(--text-1); }
+  .tc-year   { font-size:18px; font-weight:700; color:var(--text-3); padding:3px 10px; border:1px solid var(--border); border-radius:3px; }
+  .tc-venue  { font-size:18px; font-weight:700; color:var(--accent); padding:3px 10px; border:1px solid var(--accent-lo); border-radius:3px; background:var(--accent-bg); }
+  .tc-tag    { font-size:24px; color:var(--accent); font-style:italic; }
+  .tc-desc   { font-size:28px; color:var(--text-2); line-height:1.6; flex:1; }
+  .tc-desc strong { color:var(--text-1); }
+
+  .pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+  .pill  { font-size:18px; font-weight:600; padding:5px 14px; border-radius:4px; background:var(--accent-bg); border:1px solid var(--accent-lo); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">The Ecosystem</span>
+    <h1 class="page-title">Other <strong>Key Techniques</strong></h1>
+  </div>
+
+  <div class="timeline">
+    <div class="titem"><div class="tyear">2020</div><div class="tdot big"></div><div class="tname">NeRF</div></div>
+    <div class="tline"></div>
+    <div class="titem"><div class="tyear">2021</div><div class="tdot"></div><div class="tname">Mip-NeRF</div></div>
+    <div class="tline"></div>
+    <div class="titem"><div class="tyear">2022</div><div class="tdot"></div><div class="tname">Instant NGP</div></div>
+    <div class="tline"></div>
+    <div class="titem"><div class="tyear">2023</div><div class="tdot big"></div><div class="tname">3DGS</div></div>
+    <div class="tline"></div>
+    <div class="titem"><div class="tyear">2022–</div><div class="tdot"></div><div class="tname">Generative NR</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="tcard">
+      <div class="tc-header"><span class="tc-name">Instant NGP</span><span class="tc-year">2022</span><span class="tc-venue">SIGGRAPH</span></div>
+      <div class="tc-tag">NeRF in seconds, not days</div>
+      <div class="tc-desc">Replaces the MLP with a <strong>multiresolution hash encoding</strong>. Training drops from days to <strong>seconds to minutes</strong>. Enabled NVIDIA's real-time NeRF demo.</div>
+      <div class="pills"><span class="pill">Hash Encoding</span><span class="pill">100× Speedup</span></div>
+    </div>
+
+    <div class="tcard">
+      <div class="tc-header"><span class="tc-name">Mip-NeRF</span><span class="tc-year">2021</span><span class="tc-venue">ICCV</span></div>
+      <div class="tc-tag">Anti-aliased neural rendering</div>
+      <div class="tc-desc">NeRF casts rays → aliasing at different scales. Mip-NeRF casts <strong>cones</strong> and integrates over frustum volumes — much better multi-scale quality.</div>
+      <div class="pills"><span class="pill">Anti-Aliasing</span><span class="pill">Cone Tracing</span></div>
+    </div>
+
+    <div class="tcard">
+      <div class="tc-header"><span class="tc-name">Generative Neural Rendering</span><span class="tc-year">2022–</span></div>
+      <div class="tc-tag">Create 3D content from text or images</div>
+      <div class="tc-desc">Combines NeRF with <strong>diffusion models</strong>. DreamFusion: text → 3D scene. EG3D: GAN + NeRF for 3D-consistent face synthesis.</div>
+      <div class="pills"><span class="pill">Text-to-3D</span><span class="pill">Diffusion + NeRF</span></div>
+    </div>
+
+    <div class="tcard">
+      <div class="tc-header"><span class="tc-name">Dynamic NeRF</span><span class="tc-year">2021–</span></div>
+      <div class="tc-tag">Extend NeRF to moving scenes</div>
+      <div class="tc-desc">NeRF assumes a <strong>static world</strong>. D-NeRF, Nerfies, HyperNeRF add a time dimension or deformation field — reconstructing humans and dynamic environments.</div>
+      <div class="pills"><span class="pill">Temporal NeRF</span><span class="pill">Deformation Field</span></div>
+    </div>
+  </div>
+
+  <div class="slide-num">08 / 12</div>
+</div>
+</body>
+</html>

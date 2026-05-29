@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Implicit Neural Representations</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:36px; flex-shrink:0; }
+
+  .vs-row { display:grid; grid-template-columns:1fr 64px 1fr; align-items:center; margin-bottom:24px; flex-shrink:0; }
+
+  .rcard { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:30px 34px; }
+  .rcard.explicit { border-top:6px solid var(--red); }
+  .rcard.implicit { border-top:6px solid var(--accent); }
+
+  .rlabel { font-size:18px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+  .rlabel.explicit { color:var(--red); }
+  .rlabel.implicit { color:var(--accent); }
+
+  .rname { font-size:34px; font-weight:700; color:var(--text-1); margin-bottom:10px; }
+  .rdesc { font-size:30px; color:var(--text-2); line-height:1.5; margin-bottom:16px; }
+
+  .tags { display:flex; gap:8px; flex-wrap:wrap; }
+  .tag { font-size:18px; padding:5px 14px; border-radius:4px; border:1px solid var(--border-hi); color:var(--text-3); font-weight:600; }
+
+  .vs-center { display:flex; align-items:center; justify-content:center; }
+  .vs-badge { width:48px; height:48px; border-radius:50%; background:var(--surface2); border:1px solid var(--border-hi); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:var(--text-3); }
+
+  .bottom { display:grid; grid-template-columns:1.1fr 1fr; gap:24px; flex:1; }
+
+  .concept-box {
+    background:var(--accent-bg); border:1px solid var(--accent-lo);
+    border-left:6px solid var(--accent); border-radius:0 8px 8px 0;
+    padding:28px 32px; display:flex; flex-direction:column; gap:14px;
+  }
+  .concept-title { font-size:28px; font-weight:700; color:var(--text-1); }
+  .concept-desc  { font-size:30px; color:var(--text-2); line-height:1.6; flex:1; }
+  .concept-desc strong { color:var(--accent); }
+
+  .formula { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:16px 22px; font-size:28px; color:var(--accent); font-weight:600; }
+  .flabel  { display:block; font-size:18px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
+
+  .analogy-col { display:flex; flex-direction:column; gap:12px; }
+  .acard { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px 24px; display:flex; gap:18px; align-items:center; flex:1; }
+  .aicon { font-size:38px; flex-shrink:0; }
+  .aname { font-size:28px; font-weight:700; color:var(--text-1); margin-bottom:4px; }
+  .adesc { font-size:26px; color:var(--text-2); line-height:1.4; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Core Concept</span>
+    <h1 class="page-title"><strong>Implicit Neural Representations</strong></h1>
+  </div>
+
+  <div class="vs-row">
+    <div class="rcard explicit">
+      <div class="rlabel explicit">Explicit</div>
+      <div class="rname">Store the geometry directly</div>
+      <div class="rdesc">Concrete data structure — triangles, voxels, point clouds.</div>
+      <div class="tags"><span class="tag">Mesh</span><span class="tag">Point Cloud</span><span class="tag">Voxel Grid</span></div>
+    </div>
+    <div class="vs-center"><div class="vs-badge">vs</div></div>
+    <div class="rcard implicit">
+      <div class="rlabel implicit">Implicit Neural</div>
+      <div class="rname">Encode the scene in a function</div>
+      <div class="rdesc">The scene is a <strong style="color:var(--accent)">learned neural network</strong> — maps coordinates → properties.</div>
+      <div class="tags"><span class="tag">NeRF</span><span class="tag">SDF Network</span><span class="tag">Occupancy Net</span></div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="concept-box">
+      <div class="concept-title">What does this mean?</div>
+      <div class="concept-desc">A network <strong>F<sub>θ</sub></strong> is a continuous function. The scene is encoded <em>in the weights</em> — query any point by running the network forward.</div>
+      <div class="formula"><span class="flabel">General Form</span>F<sub>θ</sub>(x, y, z) → scene property</div>
+      <div class="formula"><span class="flabel">NeRF</span>F<sub>θ</sub>(x, y, z, θ, φ) → (density σ, color RGB)</div>
+    </div>
+
+    <div class="analogy-col">
+      <div class="acard">
+        <div class="aicon">📐</div>
+        <div><div class="aname">Like a math function</div><div class="adesc">x² + y² = r² describes a circle — no list of points needed.</div></div>
+      </div>
+      <div class="acard">
+        <div class="aicon">🗜️</div>
+        <div><div class="aname">Like compression</div><div class="adesc">A few MB of weights encodes a scene needing GBs as a voxel grid.</div></div>
+      </div>
+      <div class="acard">
+        <div class="aicon">🔍</div>
+        <div><div class="aname">Infinite resolution</div><div class="adesc">Query at any spatial resolution — no pixelation from grid size.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">04 / 12</div>
+</div>
+</body>
+</html>

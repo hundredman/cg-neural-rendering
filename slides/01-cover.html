@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Cover</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+
+  /* Left: text content */
+  .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 80px 80px 120px;
+    background: var(--bg);
+    position: relative;
+    z-index: 2;
+  }
+
+  .course-label {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--text-3);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-size: 100px;
+    font-weight: 400;
+    line-height: 0.95;
+    color: var(--text-1);
+    margin-bottom: 10px;
+  }
+
+  .title-accent {
+    font-family: var(--font-display);
+    font-size: 100px;
+    font-weight: 400;
+    line-height: 0.95;
+    color: var(--accent);
+    margin-bottom: 52px;
+  }
+
+  .rule {
+    width: 64px; height: 4px;
+    background: var(--accent);
+    margin-bottom: 40px;
+  }
+
+  .subtitle {
+    font-size: 28px;
+    color: var(--text-2);
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 60px;
+  }
+
+  .meta {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .meta-item { display: flex; flex-direction: column; gap: 5px; }
+  .meta-label {
+    font-family: var(--font-mono); font-size: 13px;
+    color: var(--text-3); text-transform: uppercase; letter-spacing: 0.15em;
+  }
+  .meta-value { font-size: 22px; color: var(--text-1); }
+  .meta-sep { width: 1px; height: 40px; background: var(--border-hi); }
+
+  /* Right: visual panel */
+  .right {
+    background: #1E3A5F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .right-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Simple ray diagram */
+  .ray-label {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* Key facts */
+  .fact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 480px;
+  }
+
+  .fact {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .fact-icon { font-size: 32px; flex-shrink: 0; }
+  .fact-text { font-size: 24px; color: rgba(255,255,255,0.9); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+
+  <div class="left">
+    <div class="course-label">Computer Graphics · 2026</div>
+    <div class="title">Neural</div>
+    <div class="title-accent">Rendering</div>
+    <div class="rule"></div>
+    <div class="subtitle">Teaching Computers to See<br>and Reconstruct the World</div>
+    <div class="meta">
+      <div class="meta-item">
+        <span class="meta-label">Topics</span>
+        <span class="meta-value">NeRF · 3DGS · Implicit Neural Representations</span>
+      </div>
+      <div class="meta-sep"></div>
+      <div class="meta-item">
+        <span class="meta-label">Duration</span>
+        <span class="meta-value">10 minutes</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <!-- Subtle dot grid background -->
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.12" viewBox="0 0 960 1080" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="2" fill="white"/>
+        </pattern>
+      </defs>
+      <rect width="960" height="1080" fill="url(#dots)"/>
+    </svg>
+
+    <div class="right-inner">
+      <div class="ray-label">What we'll cover</div>
+      <div class="fact-list">
+        <div class="fact">
+          <div class="fact-icon">🎨</div>
+          <div class="fact-text">Classical rendering methods</div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon">🧠</div>
+          <div class="fact-text">Implicit Neural Representations</div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon">📷</div>
+          <div class="fact-text">NeRF — Neural Radiance Fields</div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon">✨</div>
+          <div class="fact-text">3D Gaussian Splatting</div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon">🌍</div>
+          <div class="fact-text">Applications &amp; open challenges</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">01 / 12</div>
+</div>
+</body>
+</html>

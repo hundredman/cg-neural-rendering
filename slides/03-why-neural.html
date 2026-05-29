@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Why Neural Rendering?</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display: flex; flex-direction: column; padding: 64px 120px 56px; }
+  .header { display: flex; align-items: center; gap: 24px; margin-bottom: 48px; flex-shrink: 0; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+  .col  { display: flex; flex-direction: column; gap: 0; }
+
+  .col-title {
+    font-family: var(--font-mono); font-size: 18px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .col-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .card {
+    border-left: 5px solid;
+    background: var(--surface);
+    border-radius: 0 8px 8px 0;
+    padding: 24px 30px;
+    margin-bottom: 16px;
+    flex: 1;
+  }
+  .card.prob { border-color: var(--red); }
+  .card.sol  { border-color: var(--green); }
+
+  .card-title { font-size: 28px; font-weight: 700; color: var(--text-1); margin-bottom: 8px; line-height: 1.2; }
+  .card-desc  { font-size: 28px; color: var(--text-2); line-height: 1.55; }
+  .card-desc em { color: var(--text-1); font-style: italic; }
+
+  .insight {
+    margin-top: 24px; flex-shrink: 0;
+    background: var(--accent-bg); border: 1px solid var(--accent-lo);
+    border-left: 5px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 24px 32px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .insight-label {
+    font-family: var(--font-mono); font-size: 18px; color: var(--accent);
+    letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap;
+  }
+  .insight-text { font-size: 28px; color: var(--text-1); font-style: italic; line-height: 1.45; }
+  .insight-text strong { font-style: normal; color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Motivation</span>
+    <h1 class="page-title">Why <strong>Neural Rendering</strong>?</h1>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="col-title" style="color:var(--red);">Limitations of Classical Methods</div>
+      <div class="card prob">
+        <div class="card-title">Hard to capture real-world scenes</div>
+        <div class="card-desc">Creating 3D geometry manually is expensive, slow, and error-prone.</div>
+      </div>
+      <div class="card prob">
+        <div class="card-title">Meshes can't represent fuzzy materials</div>
+        <div class="card-desc">Hair, smoke, glass, clouds don't fit triangle meshes well.</div>
+      </div>
+      <div class="card prob">
+        <div class="card-title">Novel view synthesis is unsolved</div>
+        <div class="card-desc">Rendering from a <em>new camera angle</em>, given only photos, remains hard.</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-title" style="color:var(--green);">What Neural Rendering Offers</div>
+      <div class="card sol">
+        <div class="card-title">Learn directly from photos</div>
+        <div class="card-desc">No explicit 3D model needed — just images from multiple angles.</div>
+      </div>
+      <div class="card sol">
+        <div class="card-title">Implicit, flexible representation</div>
+        <div class="card-desc">A neural network encodes geometry + appearance + lighting in one function.</div>
+      </div>
+      <div class="card sol">
+        <div class="card-title">Render from any viewpoint</div>
+        <div class="card-desc">Once trained, generate views the network never directly saw.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <span class="insight-label">Key Insight</span>
+    <div class="insight-text">
+      "What if we let a neural network <strong>learn the scene</strong> from photographs — no manual 3D modeling needed?"
+    </div>
+  </div>
+
+  <div class="slide-num">03 / 12</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Applications</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display: flex; flex-direction: column; padding: 64px 120px 56px; }
+  .header { display: flex; align-items: center; gap: 24px; margin-bottom: 44px; flex-shrink: 0; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 1; }
+
+  .acard {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 34px 36px;
+    display: flex; gap: 28px; align-items: flex-start;
+  }
+
+  .aicon { font-size: 52px; flex-shrink: 0; line-height: 1; }
+  .aname { font-size: 32px; font-weight: 700; color: var(--text-1); margin-bottom: 12px; line-height: 1.1; }
+  .adesc { font-size: 26px; color: var(--text-2); line-height: 1.55; margin-bottom: 14px; }
+  .aex   { font-family: var(--font-mono); font-size: 20px; color: var(--text-3); }
+  .aex span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Real-World Impact</span>
+    <h1 class="page-title"><strong>Applications</strong></h1>
+  </div>
+
+  <div class="grid">
+    <div class="acard">
+      <div class="aicon">📷</div>
+      <div>
+        <div class="aname">Novel View Synthesis</div>
+        <div class="adesc">Render from any camera angle never seen during training — the core task NeRF and 3DGS were built for.</div>
+        <div class="aex">e.g. <span>Google Immersive View · Photo tourism</span></div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <div class="aicon">🥽</div>
+      <div>
+        <div class="aname">AR / VR &amp; Immersive Media</div>
+        <div class="adesc">Real-time 3DGS enables photo-realistic virtual environments at 30+ fps. Scan a room → walk through it in VR.</div>
+        <div class="aex">e.g. <span>Apple Vision Pro · Meta Quest</span></div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <div class="aicon">🏙️</div>
+      <div>
+        <div class="aname">Digital Twins</div>
+        <div class="adesc">Scan a building or city block → create a photorealistic interactive digital replica for architecture and planning.</div>
+        <div class="aex">e.g. <span>NVIDIA Omniverse · Matterport</span></div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <div class="aicon">🎬</div>
+      <div>
+        <div class="aname">Film, VFX &amp; Heritage</div>
+        <div class="adesc">Re-light or re-angle captured actors without reshoots. Digitally preserve fragile historical sites forever.</div>
+        <div class="aex">e.g. <span>VFX pipelines · Notre-Dame · Pompeii 3D</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">09 / 12</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Preview screenshots (build artifacts)
+slides/*.png
+slides/preview-*.html
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+skills-lock.json
+.agents/

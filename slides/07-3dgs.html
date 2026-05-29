@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — 3D Gaussian Splatting</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:36px; flex-shrink:0; }
+  .main { display:grid; grid-template-columns:1fr 1.05fr; gap:40px; flex:1; }
+
+  .left-col { display:flex; flex-direction:column; gap:16px; }
+  .diag-panel { background:var(--surface); border:1px solid var(--border); border-top:6px solid var(--accent); border-radius:8px; padding:22px 20px; flex:1; display:flex; flex-direction:column; gap:12px; }
+  .diag-label { font-size:18px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:0.1em; }
+
+  .props-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .prop-card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:16px 18px; }
+  .pname { font-size:20px; font-weight:800; color:var(--accent); margin-bottom:4px; }
+  .pdesc { font-size:22px; color:var(--text-2); }
+
+  .right-col { display:flex; flex-direction:column; gap:20px; }
+
+  .idea-box { background:var(--accent-bg); border:1px solid var(--accent-lo); border-left:6px solid var(--accent); border-radius:0 8px 8px 0; padding:24px 28px; }
+  .idea-label { font-size:18px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+  .idea-text  { font-size:28px; color:var(--text-1); line-height:1.6; }
+  .idea-text strong { color:var(--accent); }
+
+  .compare { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .thead { display:grid; grid-template-columns:1.3fr 1fr 1fr; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .th { padding:14px 16px; font-size:18px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:0.08em; }
+  .trow { display:grid; grid-template-columns:1.3fr 1fr 1fr; border-bottom:1px solid var(--border); }
+  .trow:last-child { border-bottom:none; }
+  .td { padding:14px 16px; font-size:24px; color:var(--text-2); }
+  .td:first-child { color:var(--text-1); font-weight:700; }
+  .g { color:var(--green)!important; font-weight:700; }
+  .r { color:var(--red)!important; }
+  .b { color:var(--accent)!important; }
+
+  .impact { background:#F0FDF4; border:1px solid #BBF7D0; border-left:6px solid var(--green); border-radius:0 8px 8px 0; padding:20px 26px; }
+  .impact-label { font-size:18px; font-weight:700; color:var(--green); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
+  .impact-text  { font-size:26px; color:var(--text-1); line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Key Technique 02</span>
+    <h1 class="page-title"><strong>3D Gaussian Splatting</strong> (3DGS, 2023)</h1>
+  </div>
+
+  <div class="main">
+    <div class="left-col">
+      <div class="diag-panel">
+        <div class="diag-label">Millions of Gaussians in 3D Space</div>
+        <svg viewBox="0 0 440 280" width="100%" style="flex:1;min-height:0;">
+          <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F59E0B" stop-opacity=".8"/><stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/></radialGradient>
+            <radialGradient id="g2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2563EB" stop-opacity=".7"/><stop offset="100%" stop-color="#2563EB" stop-opacity="0"/></radialGradient>
+            <radialGradient id="g3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#16A34A" stop-opacity=".7"/><stop offset="100%" stop-color="#16A34A" stop-opacity="0"/></radialGradient>
+            <radialGradient id="g4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9333EA" stop-opacity=".65"/><stop offset="100%" stop-color="#9333EA" stop-opacity="0"/></radialGradient>
+            <radialGradient id="g5" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#DC2626" stop-opacity=".6"/><stop offset="100%" stop-color="#DC2626" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect width="440" height="280" fill="#F8FAFC" rx="4"/>
+          <ellipse cx="175" cy="128" rx="92" ry="52" fill="url(#g2)" transform="rotate(-15 175 128)"/>
+          <ellipse cx="278" cy="103" rx="72" ry="40" fill="url(#g1)" transform="rotate(20 278 103)"/>
+          <ellipse cx="133" cy="196" rx="58" ry="32" fill="url(#g3)" transform="rotate(-5 133 196)"/>
+          <ellipse cx="320" cy="177" rx="74" ry="42" fill="url(#g4)" transform="rotate(10 320 177)"/>
+          <ellipse cx="215" cy="226" rx="62" ry="34" fill="url(#g5)" transform="rotate(-20 215 226)"/>
+          <ellipse cx="105" cy="124" rx="50" ry="27" fill="url(#g2)" opacity=".6" transform="rotate(5 105 124)"/>
+          <circle cx="175" cy="128" r="5" fill="#2563EB" opacity=".9"/>
+          <circle cx="278" cy="103" r="5" fill="#F59E0B" opacity=".9"/>
+          <circle cx="320" cy="177" r="5" fill="#9333EA" opacity=".9"/>
+          <text x="16" y="268" fill="#6B7280" font-size="20" font-family="sans-serif">Each ellipsoid = one Gaussian with color &amp; opacity</text>
+        </svg>
+        <div class="props-grid">
+          <div class="prop-card"><div class="pname">μ — Position</div><div class="pdesc">3D center (x, y, z)</div></div>
+          <div class="prop-card"><div class="pname">Σ — Covariance</div><div class="pdesc">Shape &amp; orientation</div></div>
+          <div class="prop-card"><div class="pname">α — Opacity</div><div class="pdesc">Transparency</div></div>
+          <div class="prop-card"><div class="pname">SH — Color</div><div class="pdesc">View-dependent color</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="idea-box">
+        <div class="idea-label">Key Idea</div>
+        <div class="idea-text">Replace the MLP with <strong>millions of 3D Gaussian blobs</strong>. Project ("splat") them onto 2D — GPU rasterization, not slow ray marching.</div>
+      </div>
+
+      <div>
+        <div style="font-size:18px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">NeRF vs 3DGS</div>
+        <div class="compare">
+          <div class="thead"><div class="th">Property</div><div class="th">NeRF</div><div class="th">3DGS</div></div>
+          <div class="trow"><div class="td">Training</div><div class="td r">Hours – days</div><div class="td g">~30–45 min</div></div>
+          <div class="trow"><div class="td">Render speed</div><div class="td r">Seconds / image</div><div class="td g">Real-time 30+ fps</div></div>
+          <div class="trow"><div class="td">Quality</div><div class="td b">High</div><div class="td g">Very high</div></div>
+          <div class="trow"><div class="td">Editability</div><div class="td r">Hard</div><div class="td g">Easier</div></div>
+        </div>
+      </div>
+
+      <div class="impact">
+        <div class="impact-label">Impact · SIGGRAPH 2023</div>
+        <div class="impact-text">3DGS solved NeRF's speed problem. Within months it became the go-to method for real-time scene reconstruction.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">07 / 12</div>
+</div>
+</body>
+</html>
