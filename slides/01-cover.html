@@ -5,73 +5,65 @@
 <title>Neural Rendering — Cover</title>
 <link rel="stylesheet" href="../shared/tokens.css">
 <style>
-  .slide { display:grid; grid-template-columns:1fr 1fr; align-items:stretch; }
-
-  .left {
-    display:flex; flex-direction:column; justify-content:center;
-    padding:80px 80px 80px 120px;
+  .slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 160px;
+    gap: 0;
   }
 
-  .course-label { font-size:22px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:48px; }
-
-  .title { font-family:var(--font-display); font-size:108px; font-weight:400; line-height:0.95; color:var(--text-1); margin-bottom:10px; }
-  .title-accent { font-family:var(--font-display); font-size:108px; font-weight:400; line-height:0.95; color:var(--accent); margin-bottom:52px; }
-
-  .rule { width:64px; height:4px; background:var(--accent); margin-bottom:36px; }
-
-  .subtitle { font-size:30px; color:var(--text-2); font-style:italic; line-height:1.5; margin-bottom:56px; }
-
-  .meta { display:flex; gap:44px; align-items:center; }
-  .meta-item { display:flex; flex-direction:column; gap:6px; }
-  .meta-label { font-size:18px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:0.1em; }
-  .meta-value { font-size:24px; color:var(--text-1); font-weight:600; }
-  .meta-sep { width:1px; height:40px; background:var(--border-hi); }
-
-  /* Right panel */
-  .right {
-    background:#1E3A5F;
-    display:flex; flex-direction:column;
-    justify-content:center; gap:20px;
-    padding:64px 60px;
+  .kicker {
+    font-size: 22px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.2em;
+    margin-bottom: 36px;
   }
 
-  .right-label { font-size:22px; font-weight:700; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
-
-  .agenda-item {
-    display:flex; align-items:center; gap:20px;
-    background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
-    border-radius:8px; padding:20px 24px;
+  .title {
+    font-family: var(--font-display);
+    font-size: 120px; font-weight: 400; line-height: 1;
+    color: var(--text-1); margin-bottom: 0;
   }
-  .ag-num { font-size:22px; font-weight:800; color:rgba(255,255,255,0.35); width:36px; flex-shrink:0; }
-  .ag-text { font-size:26px; font-weight:600; color:rgba(255,255,255,0.9); }
+
+  .title-accent {
+    font-family: var(--font-display);
+    font-size: 120px; font-weight: 400; line-height: 1;
+    color: var(--accent); margin-bottom: 48px;
+  }
+
+  .subtitle {
+    font-size: 32px; color: var(--text-2); font-style: italic;
+    line-height: 1.5; margin-bottom: 72px;
+    max-width: 900px;
+  }
+
+  .pills {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  }
+
+  .pill {
+    font-size: 22px; font-weight: 700;
+    padding: 10px 28px; border-radius: 999px;
+    background: var(--surface2); border: 2px solid var(--border-hi);
+    color: var(--text-2);
+  }
 </style>
 </head>
 <body>
 <div class="slide">
   <div class="slide-header"></div>
 
-  <div class="left">
-    <div class="course-label">Computer Graphics · 2026</div>
-    <div class="title">Neural</div>
-    <div class="title-accent">Rendering</div>
-    <div class="rule"></div>
-    <div class="subtitle">How AI learns to see —<br>and reconstruct — the world</div>
-    <div class="meta">
-      <div class="meta-item">
-        <span class="meta-label">Duration</span>
-        <span class="meta-value">10 minutes</span>
-      </div>
-    </div>
-  </div>
+  <div class="kicker">Computer Graphics · 2026</div>
+  <div class="title">Neural</div>
+  <div class="title-accent">Rendering</div>
+  <div class="subtitle">Teaching a neural network to see the world —<br>and show it from any angle</div>
 
-  <div class="right">
-    <div class="right-label">What we'll cover</div>
-    <div class="agenda-item"><span class="ag-num">01</span><span class="ag-text">The problem with capturing reality</span></div>
-    <div class="agenda-item"><span class="ag-num">02</span><span class="ag-text">Classical method: Photogrammetry</span></div>
-    <div class="agenda-item"><span class="ag-num">03</span><span class="ag-text">What is Neural Rendering?</span></div>
-    <div class="agenda-item"><span class="ag-num">04</span><span class="ag-text">How it works (NeRF & 3DGS)</span></div>
-    <div class="agenda-item"><span class="ag-num">05</span><span class="ag-text">Real examples & applications</span></div>
-    <div class="agenda-item"><span class="ag-num">06</span><span class="ag-text">Pros, cons & what's next</span></div>
+  <div class="pills">
+    <span class="pill">📷 Photos in</span>
+    <span class="pill">🧠 AI learns</span>
+    <span class="pill">🎥 Any view out</span>
   </div>
 
   <div class="slide-num">01 / 10</div>

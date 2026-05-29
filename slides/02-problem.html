@@ -5,52 +5,34 @@
 <title>Neural Rendering — The Problem</title>
 <link rel="stylesheet" href="../shared/tokens.css">
 <style>
-  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
-  .header { display:flex; align-items:center; gap:24px; margin-bottom:44px; flex-shrink:0; }
+  .slide { display:flex; flex-direction:column; padding:64px 120px 56px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:52px; flex-shrink:0; }
 
-  .main { display:grid; grid-template-columns:1fr 1fr; gap:36px; flex:1; }
-
-  /* Left: the question */
-  .question-col { display:flex; flex-direction:column; gap:24px; }
-
-  .big-question {
-    background:var(--surface2); border:1px solid var(--border);
-    border-left:6px solid var(--accent); border-radius:0 8px 8px 0;
-    padding:32px 36px;
+  /* Big central question */
+  .big-q {
+    font-size: 42px; font-weight: 800; color: var(--text-1);
+    line-height: 1.35; text-align: center;
+    margin-bottom: 52px; flex-shrink: 0;
   }
-  .bq-label { font-size:20px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
-  .bq-text  { font-size:30px; color:var(--text-1); line-height:1.55; font-weight:600; }
+  .big-q span { color: var(--accent); }
 
-  .scenario {
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:8px; padding:28px 32px;
-    display:flex; gap:20px; align-items:flex-start; flex:1;
+  /* Three problems, side by side, each very simple */
+  .cards {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px; flex: 1;
   }
-  .sc-icon { font-size:44px; flex-shrink:0; }
-  .sc-title { font-size:26px; font-weight:700; color:var(--text-1); margin-bottom:8px; }
-  .sc-desc  { font-size:24px; color:var(--text-2); line-height:1.55; }
 
-  /* Right: why it's hard */
-  .why-col { display:flex; flex-direction:column; gap:20px; }
-
-  .why-title { font-size:24px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
-
-  .prob-card {
-    background:var(--surface); border:1px solid var(--border);
-    border-left:5px solid var(--red); border-radius:0 8px 8px 0;
-    padding:22px 28px; flex:1;
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-top: 5px solid var(--red); border-radius: 8px;
+    padding: 36px 32px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 16px;
   }
-  .prob-title { font-size:26px; font-weight:700; color:var(--text-1); margin-bottom:6px; }
-  .prob-desc  { font-size:23px; color:var(--text-2); line-height:1.5; }
 
-  .answer-box {
-    background:var(--accent-bg); border:1px solid var(--accent-lo);
-    border-radius:8px; padding:24px 28px;
-    margin-top:8px; flex-shrink:0;
-  }
-  .answer-label { font-size:20px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
-  .answer-text  { font-size:26px; color:var(--text-1); line-height:1.5; }
-  .answer-text strong { color:var(--accent); }
+  .card-icon { font-size: 56px; }
+  .card-title { font-size: 28px; font-weight: 800; color: var(--text-1); line-height: 1.2; }
+  .card-desc  { font-size: 24px; color: var(--text-2); line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -58,55 +40,31 @@
   <div class="slide-header"></div>
   <div class="header">
     <span class="page-tag">The Problem</span>
-    <h1 class="page-title">Capturing Reality is <strong>Hard</strong></h1>
+    <h1 class="page-title">Why is capturing reality <strong>hard</strong>?</h1>
   </div>
 
-  <div class="main">
-    <div class="question-col">
-      <div class="big-question">
-        <div class="bq-label">The goal</div>
-        <div class="bq-text">Take photos of a real place or object → render it from any angle, like a video game.</div>
-      </div>
+  <div class="big-q">
+    You took 100 photos of a building.<br>
+    Can the computer show it from an angle <span>you never photographed</span>?
+  </div>
 
-      <div class="scenario">
-        <div class="sc-icon">📸</div>
-        <div>
-          <div class="sc-title">Example: you take 100 photos of a building</div>
-          <div class="sc-desc">Can a computer figure out what the building looks like from an angle you never photographed?</div>
-        </div>
-      </div>
-
-      <div class="scenario">
-        <div class="sc-icon">🎬</div>
-        <div>
-          <div class="sc-title">Example: film VFX</div>
-          <div class="sc-desc">Scan an actor's face → render it from any camera angle in post-production, without reshoots.</div>
-        </div>
-      </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">📷</div>
+      <div class="card-title">Photos lose depth</div>
+      <div class="card-desc">A camera collapses 3D into 2D. One photo can't tell you how far away anything is.</div>
     </div>
 
-    <div class="why-col">
-      <div class="why-title">Why is this hard?</div>
+    <div class="card">
+      <div class="card-icon">💡</div>
+      <div class="card-title">Light is complicated</div>
+      <div class="card-desc">The same surface looks different from every angle — reflections, shadows, transparency all change.</div>
+    </div>
 
-      <div class="prob-card">
-        <div class="prob-title">A photo loses depth</div>
-        <div class="prob-desc">A camera collapses 3D into 2D — depth information is gone. One photo can't tell you the shape of an object.</div>
-      </div>
-
-      <div class="prob-card">
-        <div class="prob-title">Light is complicated</div>
-        <div class="prob-desc">The same surface looks different from different angles — reflections, shadows, and transparency all change.</div>
-      </div>
-
-      <div class="prob-card">
-        <div class="prob-title">Missing information</div>
-        <div class="prob-desc">Parts of the scene hidden from the camera can't be seen in any photo — yet we want to render them too.</div>
-      </div>
-
-      <div class="answer-box">
-        <div class="answer-label">The big question</div>
-        <div class="answer-text">Can a neural network <strong>fill in the gaps</strong> and reconstruct a full 3D scene from 2D photos alone?</div>
-      </div>
+    <div class="card">
+      <div class="card-icon">🙈</div>
+      <div class="card-title">Some parts are hidden</div>
+      <div class="card-desc">Anything behind or below the object is invisible in photos — yet we want to render it anyway.</div>
     </div>
   </div>
 

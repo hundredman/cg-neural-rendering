@@ -5,29 +5,29 @@
 <title>Neural Rendering — How NeRF Works</title>
 <link rel="stylesheet" href="../shared/tokens.css">
 <style>
-  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
-  .header { display:flex; align-items:center; gap:24px; margin-bottom:36px; flex-shrink:0; }
+  .slide { display:flex; flex-direction:column; padding:64px 120px 56px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:40px; flex-shrink:0; }
 
-  .main { display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1; }
+  .main { display:grid; grid-template-columns:1fr 1fr; gap:48px; flex:1; }
 
-  /* Left: diagram */
-  .diag-panel {
+  /* Left: clean diagram */
+  .diag {
     background:var(--surface); border:1px solid var(--border);
     border-top:5px solid var(--accent); border-radius:8px;
-    padding:24px 22px; display:flex; flex-direction:column; gap:12px;
+    padding:28px 24px; display:flex; flex-direction:column; gap:10px;
   }
   .diag-label { font-size:20px; font-weight:700; color:var(--text-2); }
 
-  /* Right: steps */
-  .right-col { display:flex; flex-direction:column; gap:18px; }
+  /* Right: 4 steps, clean */
+  .steps { display:flex; flex-direction:column; gap:16px; }
 
   .step {
+    display:flex; gap:20px; align-items:flex-start;
     background:var(--surface); border:1px solid var(--border);
-    border-radius:8px; padding:18px 22px;
-    display:flex; gap:18px; align-items:flex-start;
+    border-radius:8px; padding:20px 24px; flex:1;
   }
   .snum {
-    width:38px; height:38px; border-radius:50%;
+    width:40px; height:40px; border-radius:50%;
     background:var(--accent-bg); border:2px solid var(--accent-lo);
     color:var(--accent); font-size:20px; font-weight:800;
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
@@ -35,48 +35,38 @@
   .sname { font-size:24px; font-weight:700; color:var(--text-1); margin-bottom:4px; }
   .sdesc { font-size:21px; color:var(--text-2); line-height:1.45; }
 
-  .formula-box {
-    background:var(--surface2); border:1px solid var(--border);
-    border-radius:6px; padding:16px 22px;
-    font-size:26px; color:var(--accent); font-weight:700; text-align:center;
-    flex-shrink:0;
-  }
-  .formula-box .fl { display:block; font-size:18px; font-weight:700; color:var(--text-2); margin-bottom:6px; }
-
-  .year-badge {
+  .formula {
     background:var(--surface2); border:1px solid var(--border); border-radius:6px;
-    padding:14px 20px; font-size:22px; color:var(--text-2); font-weight:600; flex-shrink:0;
+    padding:16px 24px; text-align:center;
+    font-size:26px; font-weight:700; color:var(--accent); flex-shrink:0;
   }
-  .year-badge strong { color:var(--accent); }
+  .fl { display:block; font-size:18px; font-weight:700; color:var(--text-2); margin-bottom:5px; }
 </style>
 </head>
 <body>
 <div class="slide">
   <div class="slide-header"></div>
   <div class="header">
-    <span class="page-tag">How It Works · Part 1</span>
-    <h1 class="page-title"><strong>NeRF</strong> · Neural Radiance Fields <span style="font-size:32px; color:var(--text-3); font-weight:400;">(2020)</span></h1>
+    <span class="page-tag">How It Works · 1</span>
+    <h1 class="page-title"><strong>NeRF</strong> · Neural Radiance Fields <span style="font-size:30px;color:var(--text-3);font-weight:400;">(2020)</span></h1>
   </div>
 
   <div class="main">
-    <!-- Diagram -->
-    <div class="diag-panel">
+    <div class="diag">
       <div class="diag-label">How NeRF renders one pixel</div>
       <svg viewBox="0 0 480 500" width="100%" style="flex:1;">
         <defs>
-          <marker id="dn" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+          <marker id="dn"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
           <marker id="dnG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16A34A"/></marker>
         </defs>
 
-        <!-- Box 1 -->
-        <rect x="50" y="16" width="380" height="72" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.5"/>
-        <text x="240" y="50" text-anchor="middle" fill="#2563EB" font-size="26" font-family="sans-serif" font-weight="800">📷  Shoot a ray through the pixel</text>
-        <text x="240" y="76" text-anchor="middle" fill="#6B7280" font-size="20" font-family="sans-serif">sample points t₁, t₂, t₃ … along the ray</text>
+        <rect x="50" y="16"  width="380" height="72" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.5"/>
+        <text x="240" y="50"  text-anchor="middle" fill="#2563EB" font-size="26" font-family="sans-serif" font-weight="800">📷  Shoot a ray through the pixel</text>
+        <text x="240" y="76"  text-anchor="middle" fill="#6B7280" font-size="20" font-family="sans-serif">sample points t₁, t₂, t₃ along the ray</text>
 
         <line x1="240" y1="88" x2="240" y2="124" stroke="#374151" stroke-width="2.5" marker-end="url(#dn)"/>
         <text x="252" y="114" fill="#6B7280" font-size="18" font-family="sans-serif" text-anchor="start">for each sampled point:</text>
 
-        <!-- Box 2 -->
         <rect x="50" y="128" width="380" height="72" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.5"/>
         <text x="240" y="162" text-anchor="middle" fill="#2563EB" font-size="26" font-family="sans-serif" font-weight="800">🧠  Ask the neural network</text>
         <text x="240" y="188" text-anchor="middle" fill="#6B7280" font-size="20" font-family="sans-serif">input: position + viewing direction</text>
@@ -84,8 +74,7 @@
         <line x1="240" y1="200" x2="240" y2="236" stroke="#374151" stroke-width="2.5" marker-end="url(#dn)"/>
         <text x="252" y="226" fill="#6B7280" font-size="18" font-family="sans-serif" text-anchor="start">outputs per point:</text>
 
-        <!-- Box 3a + 3b side by side -->
-        <rect x="28" y="240" width="192" height="68" rx="6" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="2"/>
+        <rect x="28"  y="240" width="192" height="68" rx="6" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="2"/>
         <text x="124" y="270" text-anchor="middle" fill="#374151" font-size="24" font-family="sans-serif" font-weight="700">Density  σ</text>
         <text x="124" y="296" text-anchor="middle" fill="#6B7280" font-size="18" font-family="sans-serif">how solid?</text>
 
@@ -93,56 +82,39 @@
         <text x="356" y="270" text-anchor="middle" fill="#2563EB" font-size="24" font-family="sans-serif" font-weight="700">Color  RGB</text>
         <text x="356" y="296" text-anchor="middle" fill="#6B7280" font-size="18" font-family="sans-serif">what color?</text>
 
-        <!-- Arrows converging -->
         <text x="240" y="328" text-anchor="middle" fill="#6B7280" font-size="18" font-family="sans-serif">combine all points along the ray:</text>
         <line x1="124" y1="334" x2="198" y2="358" stroke="#374151" stroke-width="2.5" marker-end="url(#dn)"/>
         <line x1="356" y1="334" x2="282" y2="358" stroke="#374151" stroke-width="2.5" marker-end="url(#dn)"/>
 
-        <!-- Box 4 -->
-        <rect x="50" y="362" width="380" height="68" rx="8" fill="#F0FDF4" stroke="#16A34A" stroke-width="2.5"/>
+        <rect x="50"  y="362" width="380" height="68" rx="8" fill="#F0FDF4" stroke="#16A34A" stroke-width="2.5"/>
         <text x="240" y="394" text-anchor="middle" fill="#16A34A" font-size="24" font-family="sans-serif" font-weight="800">∫  Integrate along ray</text>
         <text x="240" y="418" text-anchor="middle" fill="#6B7280" font-size="19" font-family="sans-serif">blend density × color → final pixel</text>
 
         <line x1="240" y1="430" x2="240" y2="454" stroke="#16A34A" stroke-width="2.5" marker-end="url(#dnG)"/>
 
-        <!-- Box 5 -->
         <rect x="140" y="458" width="200" height="52" rx="8" fill="#F59E0B"/>
-        <text x="240" y="490" text-anchor="middle" fill="white" font-size="26" font-family="sans-serif" font-weight="800">Pixel Color  🎨</text>
+        <text x="240" y="491" text-anchor="middle" fill="white" font-size="26" font-family="sans-serif" font-weight="800">Pixel Color 🎨</text>
       </svg>
     </div>
 
-    <!-- Steps -->
-    <div class="right-col">
+    <div class="steps">
       <div class="step">
         <div class="snum">1</div>
-        <div>
-          <div class="sname">Input: ~20–100 photos + camera positions</div>
-          <div class="sdesc">You take photos of the scene from many angles. A separate algorithm figures out where each camera was.</div>
-        </div>
+        <div><div class="sname">Take ~20–100 photos</div><div class="sdesc">From different angles, with known camera positions.</div></div>
       </div>
       <div class="step">
         <div class="snum">2</div>
-        <div>
-          <div class="sname">Train the network to reproduce the photos</div>
-          <div class="sdesc">The network tries to render each training photo. It adjusts its weights until the rendered image matches the real one.</div>
-        </div>
+        <div><div class="sname">Train the network</div><div class="sdesc">It tries to reproduce each training photo. Repeats until the output matches reality.</div></div>
       </div>
       <div class="step">
         <div class="snum">3</div>
-        <div>
-          <div class="sname">Render from any new camera angle</div>
-          <div class="sdesc">Once trained, tell the network a new camera position → it renders a photo-realistic image from that viewpoint.</div>
-        </div>
+        <div><div class="sname">Render any new angle</div><div class="sdesc">Give the trained network a new camera position → it generates the image.</div></div>
       </div>
       <div class="step">
         <div class="snum">4</div>
-        <div>
-          <div class="sname">Key insight: view-dependent appearance</div>
-          <div class="sdesc">The network takes viewing direction as input, so reflections and highlights are handled naturally — unlike a mesh.</div>
-        </div>
+        <div><div class="sname">Reflections work naturally</div><div class="sdesc">The network takes viewing direction as input, so shiny surfaces look correct from every angle.</div></div>
       </div>
-
-      <div class="formula-box">
+      <div class="formula">
         <span class="fl">What the network does</span>
         position + direction → density + color
       </div>
