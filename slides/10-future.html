@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Current Limits &amp; Future</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:36px; flex-shrink:0; }
+
+  .main { display:grid; grid-template-columns:1fr 1fr; gap:36px; flex:1; }
+
+  .col-title { font-size:22px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px; }
+
+  /* Limits */
+  .limits { display:flex; flex-direction:column; gap:14px; }
+  .limit-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-top:4px solid var(--accent); border-radius:8px;
+    padding:20px 24px; flex:1;
+  }
+  .lc-title { font-size:24px; font-weight:700; color:var(--text-1); margin-bottom:6px; }
+  .lc-desc  { font-size:21px; color:var(--text-2); line-height:1.5; }
+  .lc-desc strong { color:var(--text-1); }
+
+  /* Future */
+  .future { display:flex; flex-direction:column; gap:14px; }
+  .future-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:20px 24px;
+    display:flex; gap:16px; align-items:flex-start; flex:1;
+  }
+  .fc-icon  { font-size:32px; flex-shrink:0; }
+  .fc-title { font-size:24px; font-weight:700; color:var(--accent); margin-bottom:5px; }
+  .fc-desc  { font-size:21px; color:var(--text-2); line-height:1.5; }
+
+  /* Quote -->
+  .quote {
+    margin-top:20px; flex-shrink:0;
+    background:var(--accent-bg); border:1px solid var(--accent-lo);
+    border-left:6px solid var(--accent); border-radius:0 8px 8px 0;
+    padding:22px 28px;
+  }
+  .qtext { font-size:26px; color:var(--text-1); font-style:italic; line-height:1.6; }
+  .qtext strong { font-style:normal; color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Where We Are</span>
+    <h1 class="page-title"><strong>Current Limits</strong> &amp; What's Next</h1>
+  </div>
+
+  <div class="main">
+    <div>
+      <div class="col-title">Still unsolved</div>
+      <div class="limits">
+        <div class="limit-card">
+          <div class="lc-title">No generalization</div>
+          <div class="lc-desc">Each NeRF model only knows <strong>one scene</strong>. We don't yet have a "universal 3D model" like GPT is for language.</div>
+        </div>
+        <div class="limit-card">
+          <div class="lc-title">Can't handle moving objects</div>
+          <div class="lc-desc">Anything that moves during capture — people walking, water flowing — causes <strong>ghosting artifacts</strong>.</div>
+        </div>
+        <div class="limit-card">
+          <div class="lc-title">Hard to edit or animate</div>
+          <div class="lc-desc">The scene is stored in a neural network. You <strong>can't just drag objects around</strong> like you can in a game engine.</div>
+        </div>
+        <div class="limit-card">
+          <div class="lc-title">Scale: city-level is still hard</div>
+          <div class="lc-desc">Scaling to entire city blocks or outdoor scenes without artifacts is an active research problem.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="col-title">Where it's heading</div>
+      <div class="future">
+        <div class="future-card">
+          <div class="fc-icon">🌐</div>
+          <div>
+            <div class="fc-title">3D Foundation Models</div>
+            <div class="fc-desc">Like GPT for text, a single model that understands any 3D scene from a few photos — already emerging.</div>
+          </div>
+        </div>
+        <div class="future-card">
+          <div class="fc-icon">📱</div>
+          <div>
+            <div class="fc-title">On-device &amp; real-time</div>
+            <div class="fc-desc">Compression research is making 3DGS small enough to run on phones — photorealistic AR from your camera.</div>
+          </div>
+        </div>
+        <div class="future-card">
+          <div class="fc-icon">✍️</div>
+          <div>
+            <div class="fc-title">Text-to-3D scene</div>
+            <div class="fc-desc">"Describe a scene" → AI generates a fully renderable 3D world. DreamFusion already does early versions of this.</div>
+          </div>
+        </div>
+        <div class="future-card">
+          <div class="fc-icon">🤖</div>
+          <div>
+            <div class="fc-title">Robotics &amp; simulation</div>
+            <div class="fc-desc">Neural scenes give robots a rich, queryable map of the real world — enabling smarter navigation and manipulation.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <div class="qtext">The gap between <strong>a photo</strong> and <strong>a 3D world</strong> is closing fast — and neural rendering is doing the closing.</div>
+  </div>
+
+  <div class="slide-num">10 / 10</div>
+</div>
+</body>
+</html>

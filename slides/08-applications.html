@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Applications</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:40px; flex-shrink:0; }
+
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; flex:1; }
+
+  .acard {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:32px 34px;
+    display:flex; gap:24px; align-items:flex-start;
+  }
+
+  .aicon { font-size:52px; flex-shrink:0; line-height:1; }
+  .aname { font-size:30px; font-weight:700; color:var(--text-1); margin-bottom:10px; line-height:1.1; }
+  .adesc { font-size:24px; color:var(--text-2); line-height:1.55; margin-bottom:12px; }
+  .aex   { font-size:21px; font-weight:700; color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Real-World Impact</span>
+    <h1 class="page-title"><strong>Applications</strong></h1>
+  </div>
+
+  <div class="grid">
+    <div class="acard">
+      <div class="aicon">🥽</div>
+      <div>
+        <div class="aname">AR / VR &amp; Immersive Media</div>
+        <div class="adesc">Scan a real room or location → walk through it in VR at real-time frame rates. No manual 3D modeling needed.</div>
+        <div class="aex">→ Apple Vision Pro scenes · Meta Quest capture</div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <div class="aicon">🎬</div>
+      <div>
+        <div class="aname">Film &amp; VFX</div>
+        <div class="adesc">Scan an actor or set → re-light and re-angle in post. Eliminates costly reshoots. Used to de-age actors.</div>
+        <div class="aex">→ Production VFX pipelines · Actor capture</div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <div class="aicon">🏙️</div>
+      <div>
+        <div class="aname">Digital Twins</div>
+        <div class="adesc">Scan a building, factory, or entire city block → create a photorealistic interactive digital replica for planning and monitoring.</div>
+        <div class="aex">→ NVIDIA Omniverse · Matterport · Urban planning</div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <div class="aicon">🏛️</div>
+      <div>
+        <div class="aname">Cultural Heritage</div>
+        <div class="adesc">Digitize fragile artifacts and historical sites at ultra-high fidelity — permanent preservation even if the original is lost.</div>
+        <div class="aex">→ Notre-Dame reconstruction · Pompeii digital archive</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">08 / 10</div>
+</div>
+</body>
+</html>

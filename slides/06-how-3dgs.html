@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — 3DGS</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:36px; flex-shrink:0; }
+
+  .main { display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1; }
+
+  .left-col { display:flex; flex-direction:column; gap:20px; }
+
+  .idea-box {
+    background:var(--accent-bg); border:1px solid var(--accent-lo);
+    border-left:6px solid var(--accent); border-radius:0 8px 8px 0;
+    padding:24px 28px;
+  }
+  .idea-label { font-size:20px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+  .idea-text  { font-size:26px; color:var(--text-1); line-height:1.55; }
+  .idea-text strong { color:var(--accent); }
+
+  /* Gaussian visual panel */
+  .gauss-panel {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:20px; flex:1; display:flex; flex-direction:column; gap:12px;
+  }
+  .gauss-label { font-size:20px; font-weight:700; color:var(--text-2); }
+
+  .props-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .prop-card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:14px 16px; }
+  .pname { font-size:20px; font-weight:800; color:var(--accent); margin-bottom:3px; }
+  .pdesc { font-size:20px; color:var(--text-2); }
+
+  /* Right: comparison + speed */
+  .right-col { display:flex; flex-direction:column; gap:20px; }
+
+  .col-title { font-size:22px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+
+  .compare { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .thead { display:grid; grid-template-columns:1.3fr 1fr 1fr; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .th { padding:12px 14px; font-size:20px; font-weight:700; color:var(--text-2); }
+  .trow { display:grid; grid-template-columns:1.3fr 1fr 1fr; border-bottom:1px solid var(--border); }
+  .trow:last-child { border-bottom:none; }
+  .td { padding:12px 14px; font-size:22px; color:var(--text-2); }
+  .td:first-child { color:var(--text-1); font-weight:700; }
+  .g { color:var(--green)!important; font-weight:700; }
+  .r { color:var(--red)!important; }
+  .b { color:var(--accent)!important; }
+
+  .speed-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .speed-box { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px 22px; text-align:center; }
+  .speed-val { font-size:40px; font-weight:800; line-height:1; margin-bottom:8px; }
+  .speed-val.bad  { color:var(--red); }
+  .speed-val.good { color:var(--green); }
+  .speed-label { font-size:20px; color:var(--text-2); font-weight:600; line-height:1.35; }
+
+  .impact-box {
+    background:#F0FDF4; border:1px solid #BBF7D0;
+    border-left:5px solid var(--green); border-radius:0 8px 8px 0;
+    padding:18px 22px;
+  }
+  .impact-label { font-size:20px; font-weight:700; color:var(--green); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+  .impact-text  { font-size:23px; color:var(--text-1); line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">How It Works · Part 2</span>
+    <h1 class="page-title"><strong>3D Gaussian Splatting</strong> <span style="font-size:32px; color:var(--text-3); font-weight:400;">(2023)</span></h1>
+  </div>
+
+  <div class="main">
+    <div class="left-col">
+      <div class="idea-box">
+        <div class="idea-label">The big upgrade</div>
+        <div class="idea-text">Instead of a neural network, represent the scene as <strong>millions of colored 3D blobs</strong> (Gaussians). Splat them onto the screen — instantly.</div>
+      </div>
+
+      <div class="gauss-panel">
+        <div class="gauss-label">Each "blob" stores:</div>
+        <svg viewBox="0 0 440 200" width="100%">
+          <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F59E0B" stop-opacity=".85"/><stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/></radialGradient>
+            <radialGradient id="g2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2563EB" stop-opacity=".75"/><stop offset="100%" stop-color="#2563EB" stop-opacity="0"/></radialGradient>
+            <radialGradient id="g3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#16A34A" stop-opacity=".75"/><stop offset="100%" stop-color="#16A34A" stop-opacity="0"/></radialGradient>
+            <radialGradient id="g4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9333EA" stop-opacity=".7"/><stop offset="100%" stop-color="#9333EA" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect width="440" height="200" fill="#F8FAFC" rx="6"/>
+          <ellipse cx="160" cy="100" rx="88" ry="50" fill="url(#g2)" transform="rotate(-15 160 100)"/>
+          <ellipse cx="250" cy="80"  rx="70" ry="40" fill="url(#g1)" transform="rotate(20 250 80)"/>
+          <ellipse cx="130" cy="155" rx="56" ry="30" fill="url(#g3)" transform="rotate(-5 130 155)"/>
+          <ellipse cx="310" cy="140" rx="72" ry="40" fill="url(#g4)" transform="rotate(10 310 140)"/>
+          <ellipse cx="220" cy="160" rx="60" ry="32" fill="url(#g1)" opacity=".6" transform="rotate(-20 220 160)"/>
+          <circle cx="160" cy="100" r="5" fill="#2563EB"/>
+          <circle cx="250" cy="80"  r="5" fill="#F59E0B"/>
+          <circle cx="310" cy="140" r="5" fill="#9333EA"/>
+          <text x="16" y="192" fill="#6B7280" font-size="15" font-family="sans-serif">Millions of overlapping ellipsoids = the scene</text>
+        </svg>
+        <div class="props-grid">
+          <div class="prop-card"><div class="pname">Position</div><div class="pdesc">where in 3D space</div></div>
+          <div class="prop-card"><div class="pname">Shape</div><div class="pdesc">size &amp; orientation</div></div>
+          <div class="prop-card"><div class="pname">Color</div><div class="pdesc">view-dependent</div></div>
+          <div class="prop-card"><div class="pname">Opacity</div><div class="pdesc">how transparent</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="col-title">NeRF vs 3DGS</div>
+      <div class="compare">
+        <div class="thead"><div class="th">Property</div><div class="th">NeRF</div><div class="th">3DGS</div></div>
+        <div class="trow"><div class="td">Training</div><div class="td r">Hours – days</div><div class="td g">30–45 min</div></div>
+        <div class="trow"><div class="td">Render speed</div><div class="td r">Seconds/frame</div><div class="td g">Real-time 30+ fps</div></div>
+        <div class="trow"><div class="td">Quality</div><div class="td b">High</div><div class="td g">Very high</div></div>
+        <div class="trow"><div class="td">Editable?</div><div class="td r">Hard</div><div class="td g">Easier</div></div>
+      </div>
+
+      <div>
+        <div class="col-title">Speed in numbers</div>
+        <div class="speed-row">
+          <div class="speed-box">
+            <div class="speed-val bad">~30 s</div>
+            <div class="speed-label">NeRF<br>per frame</div>
+          </div>
+          <div class="speed-box">
+            <div class="speed-val good">30+ fps</div>
+            <div class="speed-label">3DGS<br>real-time</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="impact-box">
+        <div class="impact-label">Why it matters</div>
+        <div class="impact-text">3DGS made neural rendering fast enough for real-time applications — VR, games, live capture — for the first time.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">06 / 10</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Examples</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:36px; flex-shrink:0; }
+
+  .intro { font-size:28px; color:var(--text-2); line-height:1.5; margin-bottom:28px; flex-shrink:0; }
+  .intro strong { color:var(--text-1); }
+
+  .grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; flex:1; }
+
+  .ex-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+
+  /* Colored placeholder for video/image area */
+  .ex-thumb {
+    height:200px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px;
+    flex-shrink:0;
+  }
+  .thumb-icon { font-size:52px; }
+  .thumb-label { font-size:18px; font-weight:700; color:rgba(255,255,255,0.9); text-align:center; }
+
+  .ex-body { padding:20px 22px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .ex-title { font-size:24px; font-weight:700; color:var(--text-1); line-height:1.2; }
+  .ex-desc  { font-size:21px; color:var(--text-2); line-height:1.5; flex:1; }
+
+  .ex-link {
+    font-size:19px; font-weight:700; color:var(--accent);
+    padding:10px 14px; background:var(--accent-bg);
+    border-radius:4px; border:1px solid var(--accent-lo);
+    text-align:center; flex-shrink:0;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">See It in Action</span>
+    <h1 class="page-title"><strong>Real Examples</strong> &amp; Videos</h1>
+  </div>
+
+  <div class="intro">
+    These are real results from real systems — not CGI, not hand-modeled. <strong>Just photos in, rendered video out.</strong>
+  </div>
+
+  <div class="grid">
+    <!-- Example 1 -->
+    <div class="ex-card">
+      <div class="ex-thumb" style="background:linear-gradient(135deg,#1E3A5F,#2563EB);">
+        <div class="thumb-icon">🌿</div>
+        <div class="thumb-label">NeRF — original demo<br>(Mildenhall et al., 2020)</div>
+      </div>
+      <div class="ex-body">
+        <div class="ex-title">Lego bulldozer & fern plant</div>
+        <div class="ex-desc">The paper that started it all. 100 photos → rotate the object to any angle. Even handles transparent leaves and specular highlights.</div>
+        <div class="ex-link">→ nerf.blogs.nerfies.github.io</div>
+      </div>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="ex-card">
+      <div class="ex-thumb" style="background:linear-gradient(135deg,#14532D,#16A34A);">
+        <div class="thumb-icon">🤳</div>
+        <div class="thumb-label">Nerfies (2021)<br>selfie video → 3D avatar</div>
+      </div>
+      <div class="ex-body">
+        <div class="ex-title">Selfie video → free-viewpoint avatar</div>
+        <div class="ex-desc">Record yourself with a phone. NeRF reconstructs your face and hair as a 3D scene you can orbit around — in real time.</div>
+        <div class="ex-link">→ nerfies.github.io</div>
+      </div>
+    </div>
+
+    <!-- Example 3 -->
+    <div class="ex-card">
+      <div class="ex-thumb" style="background:linear-gradient(135deg,#4C1D95,#7C3AED);">
+        <div class="thumb-icon">✨</div>
+        <div class="thumb-label">3D Gaussian Splatting (2023)<br>real-time scene capture</div>
+      </div>
+      <div class="ex-body">
+        <div class="ex-title">Walk around a real scene at 60 fps</div>
+        <div class="ex-desc">Scan a room, park, or face. 3DGS renders it at full real-time frame rates — smooth enough for VR headsets.</div>
+        <div class="ex-link">→ repo-sam.inria.fr/fungraph/3d-gaussian-splatting</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">07 / 10</div>
+</div>
+</body>
+</html>

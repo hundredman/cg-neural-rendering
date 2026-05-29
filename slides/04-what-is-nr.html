@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — What is Neural Rendering?</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:40px; flex-shrink:0; }
+
+  /* Big one-liner */
+  .one-liner {
+    background:var(--accent-bg); border:1px solid var(--accent-lo);
+    border-left:6px solid var(--accent); border-radius:0 8px 8px 0;
+    padding:30px 36px; margin-bottom:32px; flex-shrink:0;
+  }
+  .ol-label { font-size:20px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+  .ol-text  { font-size:32px; color:var(--text-1); line-height:1.5; font-weight:600; }
+  .ol-text strong { color:var(--accent); }
+
+  /* Main: key idea vs analogy */
+  .main { display:grid; grid-template-columns:1fr 1fr; gap:32px; flex:1; }
+
+  .col-title { font-size:22px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px; }
+
+  /* Key ideas */
+  .idea-list { display:flex; flex-direction:column; gap:14px; }
+  .idea-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:20px 24px;
+    display:flex; gap:18px; align-items:flex-start;
+  }
+  .idea-icon { font-size:34px; flex-shrink:0; }
+  .idea-title { font-size:24px; font-weight:700; color:var(--text-1); margin-bottom:5px; }
+  .idea-desc  { font-size:22px; color:var(--text-2); line-height:1.5; }
+
+  /* vs photogrammetry */
+  .compare { display:flex; flex-direction:column; gap:14px; }
+  .comp-row {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; overflow:hidden;
+  }
+  .comp-header {
+    display:grid; grid-template-columns:1.2fr 1fr 1fr;
+    background:var(--surface2); border-bottom:1px solid var(--border);
+    padding:12px 16px;
+  }
+  .ch { font-size:20px; font-weight:700; color:var(--text-2); }
+  .comp-body {
+    display:grid; grid-template-columns:1.2fr 1fr 1fr;
+    padding:14px 16px; gap:0;
+  }
+  .cb       { font-size:22px; color:var(--text-2); }
+  .cb:first-child { color:var(--text-1); font-weight:700; }
+  .green { color:var(--green); font-weight:700; }
+  .amber { color:var(--amber); font-weight:700; }
+  .red   { color:var(--red); }
+
+  .divider { height:1px; background:var(--border); margin:0; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Core Concept</span>
+    <h1 class="page-title">What is <strong>Neural Rendering</strong>?</h1>
+  </div>
+
+  <div class="one-liner">
+    <div class="ol-label">In one sentence</div>
+    <div class="ol-text">Instead of building a 3D mesh, we train a <strong>neural network</strong> to memorize a scene — then ask it to render that scene from any angle.</div>
+  </div>
+
+  <div class="main">
+    <div>
+      <div class="col-title">Key ideas</div>
+      <div class="idea-list">
+        <div class="idea-card">
+          <div class="idea-icon">🧠</div>
+          <div>
+            <div class="idea-title">The network IS the 3D model</div>
+            <div class="idea-desc">No mesh, no point cloud. The scene is stored inside the neural network's weights.</div>
+          </div>
+        </div>
+        <div class="idea-card">
+          <div class="idea-icon">📸</div>
+          <div>
+            <div class="idea-title">Train on 2D photos only</div>
+            <div class="idea-desc">Give it ~20–100 photos from known angles. It learns to reproduce them — and fill in the gaps.</div>
+          </div>
+        </div>
+        <div class="idea-card">
+          <div class="idea-icon">🎥</div>
+          <div>
+            <div class="idea-title">Render from any new viewpoint</div>
+            <div class="idea-desc">Ask the trained network "what does this scene look like from here?" — it generates the image.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="col-title">vs. Photogrammetry</div>
+      <div class="comp-row">
+        <div class="comp-header">
+          <span class="ch">Property</span>
+          <span class="ch">Photogrammetry</span>
+          <span class="ch">Neural Rendering</span>
+        </div>
+        <div class="comp-body">
+          <span class="cb">Output</span>
+          <span class="cb">3D mesh + texture</span>
+          <span class="cb green">Network weights</span>
+        </div>
+        <div class="divider"></div>
+        <div class="comp-body">
+          <span class="cb">Hair / smoke</span>
+          <span class="cb red">Fails</span>
+          <span class="cb green">Works well</span>
+        </div>
+        <div class="divider"></div>
+        <div class="comp-body">
+          <span class="cb">Shiny surfaces</span>
+          <span class="cb red">Struggles</span>
+          <span class="cb green">Handles naturally</span>
+        </div>
+        <div class="divider"></div>
+        <div class="comp-body">
+          <span class="cb">Training time</span>
+          <span class="cb green">Fast</span>
+          <span class="cb amber">Minutes – hours</span>
+        </div>
+        <div class="divider"></div>
+        <div class="comp-body">
+          <span class="cb">Render speed</span>
+          <span class="cb green">Real-time</span>
+          <span class="cb amber">Getting there</span>
+        </div>
+        <div class="divider"></div>
+        <div class="comp-body">
+          <span class="cb">Edit / animate</span>
+          <span class="cb green">Easy</span>
+          <span class="cb red">Hard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">04 / 10</div>
+</div>
+</body>
+</html>

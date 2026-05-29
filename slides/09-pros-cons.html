@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neural Rendering — Pros &amp; Cons</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide { display:flex; flex-direction:column; padding:60px 120px 52px; }
+  .header { display:flex; align-items:center; gap:24px; margin-bottom:40px; flex-shrink:0; }
+
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:36px; flex:1; }
+  .col  { display:flex; flex-direction:column; gap:14px; }
+
+  .col-header {
+    font-size:26px; font-weight:800; padding:14px 20px; border-radius:8px;
+    display:flex; align-items:center; gap:12px; flex-shrink:0;
+  }
+  .col-header.pro { background:#F0FDF4; color:var(--green); border:2px solid #BBF7D0; }
+  .col-header.con { background:#FEF2F2; color:var(--red);   border:2px solid #FECACA; }
+
+  .item {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:20px 24px;
+    display:flex; gap:16px; align-items:flex-start; flex:1;
+  }
+  .item-icon { font-size:28px; flex-shrink:0; }
+  .item-title { font-size:24px; font-weight:700; color:var(--text-1); margin-bottom:5px; }
+  .item-desc  { font-size:21px; color:var(--text-2); line-height:1.5; }
+
+  /* Bottom summary row */
+  .summary {
+    margin-top:20px; flex-shrink:0;
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:8px; padding:20px 28px;
+    display:flex; align-items:center; gap:20px;
+  }
+  .sum-label { font-size:22px; font-weight:700; color:var(--text-2); white-space:nowrap; }
+  .sum-text  { font-size:24px; color:var(--text-1); line-height:1.45; }
+  .sum-text strong { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="header">
+    <span class="page-tag">Evaluation</span>
+    <h1 class="page-title"><strong>Pros &amp; Cons</strong></h1>
+  </div>
+
+  <div class="cols">
+    <!-- Pros -->
+    <div class="col">
+      <div class="col-header pro">✅ What neural rendering does well</div>
+
+      <div class="item">
+        <div class="item-icon">🌿</div>
+        <div>
+          <div class="item-title">Handles complex materials</div>
+          <div class="item-desc">Hair, smoke, glass, fur — things that break photogrammetry are handled naturally.</div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">📸</div>
+        <div>
+          <div class="item-title">Photos only — no special hardware</div>
+          <div class="item-desc">A phone camera is enough. No LiDAR, no depth sensor, no expensive equipment.</div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">💡</div>
+        <div>
+          <div class="item-title">View-dependent lighting</div>
+          <div class="item-desc">Reflections and highlights look correct from every angle — the network learns how light behaves.</div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">⚡</div>
+        <div>
+          <div class="item-title">3DGS: real-time rendering</div>
+          <div class="item-desc">3D Gaussian Splatting achieves 30+ fps — fast enough for VR and live applications.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cons -->
+    <div class="col">
+      <div class="col-header con">❌ Current limitations</div>
+
+      <div class="item">
+        <div class="item-icon">🔒</div>
+        <div>
+          <div class="item-title">One model = one scene</div>
+          <div class="item-desc">Training a NeRF gives you only that scene. New scene = train again from scratch.</div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">✏️</div>
+        <div>
+          <div class="item-title">Hard to edit</div>
+          <div class="item-desc">You can't easily move an object, change a texture, or animate — the scene is "baked in."</div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">🏃</div>
+        <div>
+          <div class="item-title">Struggles with motion</div>
+          <div class="item-desc">Moving objects cause blurring and ghosting. Capturing a running person or flowing water is still very hard.</div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-icon">💾</div>
+        <div>
+          <div class="item-title">Large file size (3DGS)</div>
+          <div class="item-desc">Millions of Gaussians can take hundreds of MB to GBs per scene — too large for most phones today.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <span class="sum-label">Bottom line</span>
+    <span class="sum-text">Neural rendering <strong>excels at capturing appearance</strong> from photos, but still lags behind traditional methods for <strong>editing, animation, and large-scale scenes.</strong></span>
+  </div>
+
+  <div class="slide-num">09 / 10</div>
+</div>
+</body>
+</html>

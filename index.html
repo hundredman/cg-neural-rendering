@@ -3,250 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <title>Neural Rendering — Deck</title>
-
 <script>
   window.DECK_MANIFEST = [
-    { file: "slides/01-cover.html",           label: "Cover" },
-    { file: "slides/02-what-is-rendering.html", label: "What is Rendering?" },
-    { file: "slides/03-why-neural.html",       label: "Why Neural Rendering?" },
-    { file: "slides/04-implicit-repr.html",    label: "Implicit Neural Representations" },
-    { file: "slides/05-nerf.html",             label: "NeRF" },
-    { file: "slides/06-nerf-results.html",     label: "NeRF: Results & Limitations" },
-    { file: "slides/07-3dgs.html",             label: "3D Gaussian Splatting" },
-    { file: "slides/08-other-techniques.html", label: "Other Key Techniques" },
-    { file: "slides/09-applications.html",     label: "Applications" },
-    { file: "slides/10-challenges.html",       label: "Challenges & Open Problems" },
-    { file: "slides/11-summary.html",          label: "Summary & Future" },
-    { file: "slides/12-qa.html",               label: "Q&A" },
+    { file: "slides/01-cover.html",        label: "Cover" },
+    { file: "slides/02-problem.html",      label: "The Problem" },
+    { file: "slides/03-photogrammetry.html", label: "Classical: Photogrammetry" },
+    { file: "slides/04-what-is-nr.html",   label: "What is Neural Rendering?" },
+    { file: "slides/05-how-nerf.html",     label: "How It Works: NeRF" },
+    { file: "slides/06-how-3dgs.html",     label: "How It Works: 3DGS" },
+    { file: "slides/07-examples.html",     label: "Real Examples & Videos" },
+    { file: "slides/08-applications.html", label: "Applications" },
+    { file: "slides/09-pros-cons.html",    label: "Pros & Cons" },
+    { file: "slides/10-future.html",       label: "Current Limits & Future" },
   ];
-
   window.DECK_WIDTH  = 1920;
   window.DECK_HEIGHT = 1080;
 </script>
-
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%;
-    background: #060a10;
-    overflow: hidden;
-    font-family: -apple-system, sans-serif;
-  }
-  #stage {
-    position: fixed;
-    top: 0; left: 0;
-    transform-origin: top left;
-    will-change: transform;
-    background: #fff;
-    box-shadow: 0 12px 60px rgba(0,0,0,0.6);
-  }
-  iframe {
-    width: 100%; height: 100%;
-    border: 0; display: block;
-    background: #0A1628;
-  }
-  .counter {
-    position: fixed;
-    bottom: 20px; right: 24px;
-    background: rgba(0,0,0,0.7);
-    color: #fff;
-    padding: 6px 16px;
-    border-radius: 999px;
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    font-variant-numeric: tabular-nums;
-    z-index: 100;
-    user-select: none;
-    opacity: 0.65;
-    transition: opacity 0.2s;
-  }
-  .counter:hover { opacity: 1; }
-  .counter .lbl { color: rgba(255,255,255,0.55); margin-left: 8px; font-size: 11px; }
-
-  .nav-zone {
-    position: fixed; top: 0; bottom: 0;
-    width: 12%; cursor: pointer; z-index: 50;
-  }
-  .nav-zone.left  { left: 0; }
-  .nav-zone.right { right: 0; }
-  .nav-hint {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 40px; height: 40px; border-radius: 999px;
-    background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.5);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; opacity: 0; transition: opacity 0.2s;
-  }
-  .nav-zone.left  .nav-hint { left: 16px; }
-  .nav-zone.right .nav-hint { right: 16px; }
-  .nav-zone:hover .nav-hint { opacity: 1; }
-
-  /* Slide thumbnail strip */
-  .thumb-strip {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 0;
-    overflow: hidden;
-    background: rgba(6,10,16,0.95);
-    transition: height 0.3s ease;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    gap: 10px;
-  }
-  .thumb-strip.open { height: 120px; }
-  .thumb-item {
-    flex-shrink: 0;
-    cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.15s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .thumb-item:hover, .thumb-item.active { opacity: 1; }
-  .thumb-num {
-    font-size: 10px;
-    font-family: monospace;
-    color: rgba(255,255,255,0.4);
-  }
-  .thumb-item.active .thumb-num { color: #F5A623; }
-  .thumb-bar {
-    width: 60px; height: 4px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 2px;
-  }
-  .thumb-item.active .thumb-bar { background: #F5A623; }
-
-  /* Help hint */
-  .help-hint {
-    position: fixed;
-    bottom: 20px; left: 24px;
-    font-size: 11px; font-family: monospace;
-    color: rgba(255,255,255,0.2);
-    letter-spacing: 0.06em;
-    z-index: 100;
-  }
-
-  @media print {
-    @page { size: 1920px 1080px; margin: 0; }
-    html, body { background: #fff; overflow: visible; height: auto; }
-    #stage { position: static; transform: none !important; box-shadow: none; }
-    .counter, .nav-zone, .help-hint, .thumb-strip { display: none !important; }
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:#060a10;overflow:hidden;font-family:-apple-system,sans-serif;}
+  #stage{position:fixed;top:0;left:0;transform-origin:top left;will-change:transform;background:#fff;box-shadow:0 12px 60px rgba(0,0,0,.6);}
+  iframe{width:100%;height:100%;border:0;display:block;background:#FAFAF8;}
+  .counter{position:fixed;bottom:20px;right:24px;background:rgba(0,0,0,.7);color:#fff;padding:6px 16px;border-radius:999px;font-size:14px;letter-spacing:.06em;font-variant-numeric:tabular-nums;z-index:100;user-select:none;opacity:.65;transition:opacity .2s;}
+  .counter:hover{opacity:1;}
+  .counter .lbl{color:rgba(255,255,255,.5);margin-left:8px;font-size:12px;}
+  .nav-zone{position:fixed;top:0;bottom:0;width:12%;cursor:pointer;z-index:50;}
+  .nav-zone.left{left:0;} .nav-zone.right{right:0;}
+  .nav-hint{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:999px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:20px;opacity:0;transition:opacity .2s;}
+  .nav-zone.left .nav-hint{left:16px;} .nav-zone.right .nav-hint{right:16px;}
+  .nav-zone:hover .nav-hint{opacity:1;}
+  .help{position:fixed;bottom:20px;left:24px;font-size:12px;font-family:monospace;color:rgba(255,255,255,.2);letter-spacing:.06em;z-index:100;}
 </style>
 </head>
 <body>
-
-<div id="stage">
-  <iframe id="frame" src="about:blank"></iframe>
-</div>
-
-<div class="nav-zone left"  id="navL"><div class="nav-hint">‹</div></div>
+<div id="stage"><iframe id="frame" src="about:blank"></iframe></div>
+<div class="nav-zone left" id="navL"><div class="nav-hint">‹</div></div>
 <div class="nav-zone right" id="navR"><div class="nav-hint">›</div></div>
-<div class="counter" id="counter">1 / 12</div>
-<div class="help-hint">← → navigate · T thumbnail strip · F fullscreen</div>
-
-<div class="thumb-strip" id="thumbStrip"></div>
-
+<div class="counter" id="counter">1 / 10</div>
+<div class="help">← → navigate · F fullscreen</div>
 <script>
-(function () {
-  const W = window.DECK_WIDTH  || 1920;
-  const H = window.DECK_HEIGHT || 1080;
-  const deck = window.DECK_MANIFEST || [];
-  const stage   = document.getElementById('stage');
-  const frame   = document.getElementById('frame');
-  const counter = document.getElementById('counter');
-  const strip   = document.getElementById('thumbStrip');
-  const storageKey = 'nr-deck-' + location.pathname;
-  let current = 0;
-  let thumbOpen = false;
-
-  stage.style.width  = W + 'px';
-  stage.style.height = H + 'px';
-
-  function fit() {
-    const s = Math.min(window.innerWidth / W, window.innerHeight / H);
-    const x = (window.innerWidth  - W * s) / 2;
-    const y = (window.innerHeight - H * s) / 2;
-    stage.style.transform = `translate(${x}px,${y}px) scale(${s})`;
-    stage.style.top  = '0';
-    stage.style.left = '0';
-  }
-
-  function show(idx) {
-    if (idx < 0 || idx >= deck.length) return;
-    current = idx;
-    frame.src = deck[idx].file;
-    counter.innerHTML = `${idx + 1} / ${deck.length} <span class="lbl">${deck[idx].label || ''}</span>`;
-    try { localStorage.setItem(storageKey, String(idx)); } catch (_) {}
-    history.replaceState(null, '', '#' + (idx + 1));
-    // update thumbnails
-    document.querySelectorAll('.thumb-item').forEach((el, i) => {
-      el.classList.toggle('active', i === idx);
-    });
-  }
-
-  // Build thumbnail strip
-  deck.forEach((item, i) => {
-    const el = document.createElement('div');
-    el.className = 'thumb-item';
-    el.innerHTML = `<div class="thumb-num">${i + 1}</div><div class="thumb-bar"></div>`;
-    el.title = item.label;
-    el.addEventListener('click', () => { show(i); });
-    strip.appendChild(el);
+(function(){
+  const W=window.DECK_WIDTH||1920,H=window.DECK_HEIGHT||1080;
+  const deck=window.DECK_MANIFEST||[];
+  const stage=document.getElementById('stage');
+  const frame=document.getElementById('frame');
+  const counter=document.getElementById('counter');
+  const key='nr-deck-'+location.pathname;
+  let cur=0;
+  stage.style.width=W+'px'; stage.style.height=H+'px';
+  function fit(){const s=Math.min(innerWidth/W,innerHeight/H);const x=(innerWidth-W*s)/2,y=(innerHeight-H*s)/2;stage.style.transform=`translate(${x}px,${y}px) scale(${s})`;stage.style.top='0';stage.style.left='0';}
+  function show(i){if(i<0||i>=deck.length)return;cur=i;frame.src=deck[i].file;counter.innerHTML=`${i+1} / ${deck.length} <span class="lbl">${deck[i].label||''}</span>`;try{localStorage.setItem(key,String(i));}catch(_){}history.replaceState(null,'','#'+(i+1));}
+  function next(){show(Math.min(cur+1,deck.length-1));}
+  function prev(){show(Math.max(cur-1,0));}
+  document.addEventListener('keydown',e=>{
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='Home'){e.preventDefault();show(0);}
+    else if(e.key==='End'){e.preventDefault();show(deck.length-1);}
+    else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen().catch(()=>{});}
+    else if(e.key>='1'&&e.key<='9'){const i=parseInt(e.key,10)-1;if(i<deck.length){e.preventDefault();show(i);}}
   });
-
-  function next() { show(Math.min(current + 1, deck.length - 1)); }
-  function prev() { show(Math.max(current - 1, 0)); }
-
-  function toggleThumb() {
-    thumbOpen = !thumbOpen;
-    strip.classList.toggle('open', thumbOpen);
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    switch (e.key) {
-      case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
-      case 'ArrowLeft':  case 'PageUp':             e.preventDefault(); prev(); break;
-      case 'Home': e.preventDefault(); show(0); break;
-      case 'End':  e.preventDefault(); show(deck.length - 1); break;
-      case 't': case 'T': toggleThumb(); break;
-      case 'f': case 'F':
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
-        else document.exitFullscreen().catch(()=>{});
-        break;
-      case 'p': case 'P': window.print(); break;
-      default:
-        if (e.key >= '1' && e.key <= '9') {
-          const i = parseInt(e.key, 10) - 1;
-          if (i < deck.length) { e.preventDefault(); show(i); }
-        }
-    }
-  });
-
-  document.getElementById('navL').addEventListener('click', prev);
-  document.getElementById('navR').addEventListener('click', next);
-  window.addEventListener('resize', fit);
-  window.addEventListener('hashchange', () => {
-    const m = location.hash.match(/^#(\d+)$/);
-    if (m) show(parseInt(m[1], 10) - 1);
-  });
-
-  // Restore position
-  const hashMatch = location.hash.match(/^#(\d+)$/);
-  if (hashMatch) current = Math.min(parseInt(hashMatch[1], 10) - 1, deck.length - 1);
-  else try {
-    const v = parseInt(localStorage.getItem(storageKey), 10);
-    if (!isNaN(v) && v >= 0 && v < deck.length) current = v;
-  } catch (_) {}
-
-  fit();
-  show(current);
+  document.getElementById('navL').addEventListener('click',prev);
+  document.getElementById('navR').addEventListener('click',next);
+  window.addEventListener('resize',fit);
+  window.addEventListener('hashchange',()=>{const m=location.hash.match(/^#(\d+)$/);if(m)show(parseInt(m[1],10)-1);});
+  const hm=location.hash.match(/^#(\d+)$/);
+  if(hm)cur=Math.min(parseInt(hm[1],10)-1,deck.length-1);
+  else try{const v=parseInt(localStorage.getItem(key),10);if(!isNaN(v)&&v>=0&&v<deck.length)cur=v;}catch(_){}
+  fit(); show(cur);
 })();
 </script>
-
 </body>
 </html>
