@@ -1,91 +1,37 @@
-/* Neural Rendering Deck — Light Theme
-   Clean, presentation-optimized, works on bright projectors
-   Min body text: 28px. Titles: 52px+. Cards per slide: ≤4. */
-
 :root {
-  /* Light palette */
-  --bg:        #FAFAF8;
-  --surface:   #FFFFFF;
-  --surface2:  #F3F4F6;
+  /* Background — light theme */
+  --bg-base:    #f8f9fc;
+  --bg-surface: #ffffff;
+  --bg-card:    #ffffff;
+  --bg-card-alt:#f1f5fd;
 
-  --border:    #E5E7EB;
-  --border-hi: #D1D5DB;
+  /* Accent */
+  --accent:     #2563eb;
+  --accent-dim: #dbeafe;
+  --accent-glow:rgba(37,99,235,0.10);
+  --teal:       #0d9488;
+  --teal-dim:   rgba(13,148,136,0.10);
+  --amber:      #d97706;
+  --red-soft:   #dc2626;
+  --green-soft: #16a34a;
 
-  --text-1:    #111827;   /* headings */
-  --text-2:    #374151;   /* body */
-  --text-3:    #6B7280;   /* muted / labels */
+  /* Text */
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+  --text-accent:    #1d4ed8;
 
-  --accent:    #2563EB;   /* blue — confident, academic */
-  --accent-bg: #EFF6FF;
-  --accent-lo: #DBEAFE;
+  /* Border */
+  --border:        rgba(15,23,42,0.10);
+  --border-accent: rgba(37,99,235,0.30);
 
-  --red:       #DC2626;
-  --green:     #16A34A;
-  --amber:     #D97706;
+  /* Typography */
+  --font-display: 'Sora', 'DM Sans', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
 
-  --font-display: 'Georgia', 'Times New Roman', serif;
-  --font-body:    -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono:    'SF Mono', 'Fira Code', 'Courier New', monospace;
+  /* Spacing */
+  --r-sm:  8px;
+  --r-md:  14px;
+  --r-lg:  20px;
 }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  width: 1920px;
-  height: 1080px;
-  overflow: hidden;
-  background: var(--bg);
-  color: var(--text-1);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-}
-
-.slide {
-  width: 1920px;
-  height: 1080px;
-  position: relative;
-  overflow: hidden;
-  background: var(--bg);
-}
-
-/* Top accent bar */
-.slide-header {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 6px;
-  background: var(--accent);
-}
-
-/* Slide number */
-.slide-num {
-  position: absolute;
-  bottom: 28px; right: 52px;
-  font-size: 18px;
-  color: var(--text-3);
-  font-family: var(--font-mono);
-  letter-spacing: 0.1em;
-}
-
-/* Tag chip */
-.page-tag {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--accent);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  background: var(--accent-bg);
-  padding: 7px 18px;
-  border-radius: 4px;
-  border: 1px solid var(--accent-lo);
-  flex-shrink: 0;
-}
-
-/* Page title */
-.page-title {
-  font-size: 54px;
-  font-weight: 300;
-  color: var(--text-1);
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-}
-.page-title strong { font-weight: 800; }
