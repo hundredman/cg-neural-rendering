@@ -955,7 +955,11 @@
 
   "NeRF's key insight: a scene can be represented as a continuous 5D function (x,y,z + viewing angle θ,φ) → (RGB color, density σ). To render a pixel, you shoot a ray through it, sample 64-128 points along the ray, ask the MLP for color+density at each point, and composite them using volume rendering. Training takes 1-8 hours on one GPU. Inference (rendering one frame) takes seconds to minutes. The MLP has only ~5MB — surprisingly compact.",
 
+  "Show the audience this image and let it sink in. This is the lego bulldozer — one of the most iconic NeRF results. The model was trained on about 100 photos of a physical lego set. There is no 3D model file, no manual modeling. The neural network figured out the geometry and appearance entirely from photos. The rendering you see is from a viewpoint that was never photographed.",
+
   "3DGS (Kerbl et al., 2023) replaces the implicit MLP with millions of explicit 3D Gaussians. Each Gaussian has: position, covariance (shape/orientation), color (as spherical harmonics), and opacity. Rendering uses splatting: project each Gaussian onto the image plane, sort by depth, alpha-composite front to back. Key advantage: real-time rendering at 30-100+ fps after training. Training is also faster: ~30 min vs hours for NeRF. Editing is harder though — no clean geometry.",
+
+  "This is the bicycle scene from the original 3DGS paper — a real outdoor scene scanned with a camera and reconstructed as millions of 3D Gaussians. Notice the fine detail in the grass, the spokes, the leaves in the trees. This renders at 30–100+ fps in real time, which was impossible with NeRF. Point out how naturally soft and sharp areas coexist — that is the Gaussian opacity doing its job.",
 
   "Show some real demos here if you have time. NeRF Studio is an open-source framework by UC Berkeley that makes it easy to train NeRFs. Luma AI is a commercial app — users scan objects with iPhone and get high-quality NeRF in minutes. Polycam supports both photogrammetry and NeRF. The most impressive demos: the famous 'hotdog' NeRF, the Deblur-NeRF, and real-time 3DGS demos on YouTube by the original paper's authors.",
 
@@ -1254,6 +1258,35 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
+       SLIDE 5b — NeRF RESULT
+  ══════════════════════════════════════════════ -->
+  <div class="slide" id="s5b">
+    <div class="slide-inner" style="padding:52px 80px; justify-content:center; flex-direction:row; align-items:center; gap:60px;">
+      <div class="bg-grid"></div>
+
+      <!-- Left: caption -->
+      <div style="flex:0 0 320px; display:flex; flex-direction:column; gap:16px;">
+        <p class="slide-label">NeRF · Result</p>
+        <h2 class="slide-title" style="font-size:clamp(36px,4vw,52px);">This is what<br>NeRF produces</h2>
+        <p style="font-size:20px; color:var(--text-secondary); line-height:1.6;">
+          The <strong style="color:var(--text-primary);">lego bulldozer</strong> scene —
+          one of the original NeRF benchmark objects.
+          Trained from ~100 photos, rendered from a completely <strong style="color:var(--text-primary);">new viewpoint</strong>.
+        </p>
+        <div style="padding:14px 18px; background:var(--accent-glow); border:1.5px solid var(--border-accent); border-radius:var(--r-md); font-size:16px; color:var(--text-accent); line-height:1.5;">
+          No 3D model was made manually.<br>The network learned it from photos.
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Source: instant-ngp (NVIDIA) · MIT License</p>
+      </div>
+
+      <!-- Right: image -->
+      <div style="flex:1; min-width:0; border-radius:16px; overflow:hidden; box-shadow:0 8px 40px rgba(0,0,0,0.12); border:1.5px solid var(--border);">
+        <img src="assets/nerf_ingp2.png" alt="NeRF lego bulldozer result" style="width:100%; height:auto; display:block;">
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
        SLIDE 6 — HOW 3DGS WORKS
   ══════════════════════════════════════════════ -->
   <div class="slide" id="s6">
@@ -1389,6 +1422,34 @@
           <p class="ba-label">Output (neural rendering)</p>
           <p class="ba-content">Dense, photorealistic rendering from any viewpoint — no holes, correct reflections, smooth surfaces</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 6b — 3DGS RESULT
+  ══════════════════════════════════════════════ -->
+  <div class="slide" id="s6b">
+    <div class="slide-inner" style="padding:52px 80px; justify-content:center; flex-direction:row; align-items:center; gap:60px;">
+      <div class="bg-grid"></div>
+
+      <!-- Left: image -->
+      <div style="flex:1; min-width:0; border-radius:16px; overflow:hidden; box-shadow:0 8px 40px rgba(0,0,0,0.12); border:1.5px solid var(--border);">
+        <img src="assets/3dgs_bicycle.png" alt="3DGS bicycle scene result" style="width:100%; height:auto; display:block;">
+      </div>
+
+      <!-- Right: caption -->
+      <div style="flex:0 0 320px; display:flex; flex-direction:column; gap:16px;">
+        <p class="slide-label">3DGS · Result</p>
+        <h2 class="slide-title" style="font-size:clamp(36px,4vw,52px);">Real-time,<br>photorealistic</h2>
+        <p style="font-size:20px; color:var(--text-secondary); line-height:1.6;">
+          The <strong style="color:var(--text-primary);">bicycle scene</strong> from the original 3DGS paper.
+          An outdoor real-world capture rendered at <strong style="color:var(--text-primary);">30–100+ fps</strong>.
+        </p>
+        <div style="padding:14px 18px; background:rgba(13,148,136,0.08); border:1.5px solid rgba(13,148,136,0.3); border-radius:var(--r-md); font-size:16px; color:var(--teal); line-height:1.5;">
+          Compare the grass, spokes, leaves —<br>each one is just a 3D Gaussian blob.
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Source: Kerbl et al., SIGGRAPH 2023 · INRIA</p>
       </div>
     </div>
   </div>
