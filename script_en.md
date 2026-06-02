@@ -1,65 +1,82 @@
 # Neural Rendering — Presentation Script (English)
 
 > **Duration:** ~15–20 minutes (excluding Q&A)
-> **Structure:** Slide-by-slide script + key explanation points
-> **Tip:** Press `S` on the slide to show brief speaker notes.
+> **[brackets]** = action / pause cues
+> *italics* = emphasize when speaking
 
 ---
 
 ## Slide 1 — Cover
 
-Hello everyone, my name is Sieun Sam Kim.
-Today I'll be talking about **Neural Rendering** —
-how we can use neural networks to reconstruct and synthesize 3D scenes from photographs.
+Hi everyone.
 
-Quick question before we start:
-has anyone here used an app like Luma AI, or tried the spatial scanning feature on an iPhone?
-The technology behind those experiences is exactly what we're going to cover today.
+So today I'll be talking about Neural Rendering.
 
-Here's the roadmap:
-we'll start by looking at why classical 3D reconstruction hits a wall,
-then walk through photogrammetry as the stepping stone,
-and then dive into two modern neural approaches — NeRF ("nerf") and 3D Gaussian Splatting ("three-dee gaussian splatting").
+Now, that term can sound pretty abstract, so let me give you the one-sentence version first.
+
+You take a bunch of photos of a place.
+A neural network looks at those photos and *learns* the scene.
+And then — you can view it from angles the camera never actually went to.
+
+Has anyone here used Luma AI ("loo-ma ay-eye")?
+It's this iPhone app where you walk around an object,
+and it reconstructs it in 3D.
+That's exactly the kind of thing we're talking about today.
+
+Here's the plan:
+first we'll look at why old methods hit a wall,
+then I'll walk you through two modern approaches — NeRF ("nerf") and 3D Gaussian Splatting ("three-dee gaussian splatting").
+
+Let's go.
 
 ---
 
 ## Slide 2 — Why Classical Methods Fall Short
 
-There are two dominant approaches to classical 3D reconstruction.
+So how did people make 3D scenes before?
 
-The first is **manual 3D modeling** — artists building scenes by hand in tools like Blender or Maya.
-This gives full creative control, but even a simple object can take dozens of hours.
-And there's simply no way to faithfully reproduce the real world at scale.
+There are basically two ways.
 
-The second is **photogrammetry** — automatically reconstructing 3D from photos.
-It works well for certain things, but it completely falls apart on transparent objects,
-reflective surfaces, and thin structures like wire or hair.
+One — artists build it by hand.
+Tools like Blender or Maya, modeling everything manually.
+Even a simple object takes dozens of hours.
+Reproducing the real world at any real scale? Not happening.
 
-Both methods share the same fundamental limitation:
-**neither can produce a photorealistic rendering from an arbitrary new viewpoint.**
-That is exactly the problem Neural Rendering is designed to solve.
+Two — photogrammetry.
+You take lots of photos and the software reconstructs 3D automatically.
+Works pretty well for buildings and statues.
+But the moment you point it at glass, or a mirror, or anything thin like wire or hair —
+it completely falls apart.
+
+Both approaches have the same core problem.
+
+*"You can't produce a photorealistic image from a new viewpoint."*
+
+That's exactly what Neural Rendering is trying to fix.
 
 ---
 
 ## Slide 3 — How Photogrammetry Works
 
-Before we get to neural approaches, let's briefly understand photogrammetry —
-because it's actually the starting point for NeRF as well.
+Before we get into NeRF, let's quickly understand photogrammetry —
+because NeRF actually builds on top of it.
 
-The idea is this: take many photos from different angles,
-find the **same physical point** across multiple images,
-and triangulate its 3D position.
-This process is called **Structure from Motion**, or SfM ("ess-eff-em").
+The idea is pretty simple.
 
-The output is a **point cloud** — millions of 3D points.
-It works beautifully on buildings, statues, rocky terrain —
-anything that's opaque, matte, and texture-rich.
+You take photos from a bunch of different angles.
+You find the *same physical point* across multiple images.
+And you triangulate its 3D position.
 
-It struggles with glass, mirrors, fur, and anything whose appearance
-changes depending on the viewing angle — which is most of the interesting stuff.
+This is called Structure from Motion, or SfM ("ess-eff-em").
 
-The standard open-source tool for this is **COLMAP ("col-map")**,
-and notably, NeRF uses COLMAP as a preprocessing step to figure out where the cameras were.
+The output is a point cloud — millions of 3D dots floating in space.
+
+For buildings, rock faces, statues — it looks great.
+But for glass, mirrors, fur, anything that looks *different* depending on the angle —
+it falls apart.
+
+The standard open-source tool is COLMAP ("col-map").
+And notably — NeRF uses COLMAP as a first step to figure out where the cameras were.
 
 ---
 
@@ -67,205 +84,234 @@ and notably, NeRF uses COLMAP as a preprocessing step to figure out where the ca
 
 So what does Neural Rendering do differently?
 
-The core idea is this:
-**instead of explicitly storing geometry, a neural network learns to represent the scene itself.**
+Old methods *store* geometry.
+"This surface is here, and it's this color." Done.
 
-Classical methods ask: "what does this surface look like?"
-Neural Rendering asks: "if I stand at position X looking in direction D, what color do I see?"
-The network learns to answer that question for any position and direction —
-including ones that were never photographed.
+Neural Rendering asks a different question:
+*"If I'm standing at this position, looking in this direction — what color do I see?"*
 
-There are two key methods today.
+A neural network learns to answer that question for any position and direction —
+including ones no camera ever visited.
 
-**NeRF** — Neural Radiance Field, 2020.
-A small MLP ("em-el-pee", multilayer perceptron) network implicitly encodes the entire scene.
-Keywords: Implicit · MLP · Volume Rendering.
+Right now there are two main methods.
 
-**3D Gaussian Splatting** — 3DGS ("three-dee-gee-ess"), 2023.
-Millions of explicit 3D ellipsoids represent the scene.
-Keywords: Explicit · Rasterization · Real-time.
+**NeRF** — came out in 2020.
+A tiny neural network implicitly encodes the entire scene inside its weights.
+Keywords: Implicit, MLP ("em-el-pee"), Volume Rendering.
 
-Both enable **novel view synthesis** — you can place a virtual camera anywhere and get a photorealistic render.
+**3D Gaussian Splatting, 3DGS ("three-dee-gee-ess")** — 2023.
+Millions of 3D ellipsoids explicitly represent the scene.
+And it renders in *real time*.
+Keywords: Explicit, Rasterization ("rass-ter-ih-ZAY-shun"), Real-time.
 
 ---
 
 ## Slide 5 — How NeRF Works
 
-Let me walk you through the NeRF pipeline step by step.
+Okay, let me walk you through NeRF step by step.
 
-**① Input: 50–200 photos + camera poses.**
-COLMAP estimates where each photo was taken in 3D space.
-Each photo becomes a training example.
+[point to the pipeline diagram, left to right]
 
-**② Cast a ray through each pixel.**
-For every pixel we want to render, we shoot a ray from the camera
-out into the 3D scene. This is the reverse of how light actually travels —
-we're tracing the path light would have taken to reach that pixel.
+**Step one — photos in.**
+50 to 200 photos, plus camera positions estimated by COLMAP.
+Each photo is a training example.
 
-**③ Sample points along the ray and query the MLP.**
-We place 64–128 sample points along the ray,
-and for each point we feed five numbers into the network:
-position x ("ex"), y ("why"), z ("zee") and viewing direction θ ("theta"), φ ("phi").
-The network outputs two things: **RGB ("ar-gee-bee") color** and **σ ("sigma"), density**.
-High σ (sigma) means there's something solid there. Low σ (sigma) means empty space.
+**Step two — shoot a ray.**
+For every pixel we want to render, we shoot a ray out from the camera into the scene.
+Think of it as tracing the path light *would have taken* to reach that pixel, but in reverse.
 
-**④ Volume rendering produces the pixel color.**
-We composite the samples front to back.
-High-density points occlude what's behind them; low-density points are transparent.
-The result is a single pixel color.
+**Step three — ask the network.**
+We sample 64 to 128 points along that ray.
+For each point, we feed five numbers into the network:
+position x ("ex"), y ("why"), z ("zee"),
+and viewing direction θ ("theta"), φ ("phi").
+The network spits out two things:
+RGB ("ar-gee-bee") color, and σ ("sigma") — density.
+High σ (sigma) means something's there. Low σ (sigma) means empty space.
 
-**⑤ Compare against the real photo and update the network.**
-We compute the difference between the predicted and real pixel color —
-this difference is the Loss — and backpropagate to update the MLP weights.
-Repeat this millions of times across all rays in all training images.
-Training takes 1–8 hours on a single GPU ("gee-pee-you").
+**Step four — volume rendering.**
+We blend those samples front to back.
+Dense points block what's behind them.
+Transparent points let light through.
+Result: one pixel color.
+
+**Step five — compare and repeat.**
+We compare the predicted color against the actual photo.
+That difference is the loss.
+Backpropagate, update the weights, repeat — millions of times.
+Training takes one to eight hours on a single GPU ("gee-pee-you").
 
 ---
 
 ## Slide 5b — NeRF Result
 
-Let's look at what this actually produces.
+Let's see what this actually looks like.
 
-What you see here is the **lego bulldozer** scene —
-one of the most iconic results from the original NeRF paper.
-The model was trained on about 100 photos of a physical lego set.
+[pause, let the image land]
 
-There is no 3D model file. No artist touched this.
-The neural network inferred the geometry and appearance entirely from photographs.
-The camera angle you're seeing was **never physically photographed**.
+This is the lego bulldozer scene.
 
-On the upper right you can see the instant-ngp ("instant-en-gee-pee") interface —
-that's NVIDIA's open-source implementation.
-This quality is achievable on a laptop GPU in a matter of minutes.
+Someone photographed a physical lego set from about 100 angles.
+Fed those photos into NeRF.
+That's it.
+
+No 3D model file. No artist. Nothing manual.
+The network figured out the geometry and appearance entirely from photos.
+
+And the viewpoint you're looking at right now?
+*That angle was never photographed.*
+
+The UI ("you-eye") on the top right is instant-ngp ("instant-en-gee-pee") —
+NVIDIA's open-source implementation.
+This quality, on a laptop GPU, in a few minutes.
 
 ---
 
 ## Slide 6 — How 3D Gaussian Splatting Works
 
-3DGS takes a fundamentally different approach from NeRF.
-Instead of a neural network, it uses millions of **3D Gaussians** — small ellipsoids — to represent the scene.
+3DGS takes a different angle — no pun intended.
 
-The pipeline:
+Where NeRF hides everything inside a neural network,
+3DGS uses millions of explicit little 3D blobs — Gaussians — to represent the scene directly.
 
-**① Start from the SfM point cloud.**
-Take the sparse 3D points from COLMAP and use them as seeds for Gaussians.
+[point to the pipeline, left to right]
 
-**② Each point becomes a 3D Gaussian.**
-Each Gaussian has four learnable parameters:
-- **μ ("mu")** — position x, y, z
-- **Σ ("capital sigma")** — shape and orientation (how elongated and in what direction)
-- **SH ("ess-aitch")** — color, encoded as Spherical Harmonics so it can change with viewing angle
-- **α ("alpha")** — opacity
+**Step one — start from the point cloud.**
+Take the sparse 3D points from COLMAP, use them as starting seeds.
 
-**③ Project each Gaussian onto the image plane — this is the "splatting".**
-From the current camera's perspective, each 3D Gaussian becomes a 2D ellipse.
+**Step two — turn each point into a 3D Gaussian.**
+Each Gaussian carries four things:
+- μ ("mu") — position
+- Σ ("capital sigma") — shape and orientation
+- SH ("ess-aitch") — color, as spherical harmonics, so it changes with viewing angle
+- α ("alpha") — opacity
 
-**④ Sort by depth and alpha ("alpha") composite front to back.**
-Blend all the 2D ellipses in depth order to produce the final pixel colors.
+**Step three — splatting.**
+From the camera's perspective, each 3D Gaussian gets projected down to a 2D ellipse.
 
-Because there's no neural network at render time —
-we're just rasterizing geometric primitives —
-this achieves **30–100+ fps ("frames per second") in real time** after training.
-Training itself is also much faster: roughly 30 minutes versus 1–8 hours for NeRF.
+**Step four — sort and blend.**
+Sort by depth, alpha ("alpha") composite front to back, done.
+
+Here's the key thing:
+*no neural network* at render time.
+It's just rasterizing geometry.
+So you get 30 to 100+ fps ("frames per second") in real time.
+Training takes about 30 minutes.
 
 ---
 
 ## Slide 6b — 3DGS Result
 
-This is the **bicycle scene** from the original 3DGS paper —
-a real outdoor scene captured with a camera and reconstructed as millions of 3D Gaussians.
+Here's what 3DGS produces on a real outdoor scene.
 
-Look at the individual blades of grass, the spokes of the wheel, the leaves in the trees.
-All of that detail is represented by tiny 3D ellipsoids learned from photos.
+[pause]
 
-Unlike NeRF, this scene renders in **real time**.
-The speed is comparable to what you'd need for a game engine.
+This is a bicycle in a park.
 
-This image is from Kerbl et al. ("kerbl and colleagues"), SIGGRAPH ("sig-graph") 2023, published by INRIA ("in-ria").
+Look at the individual blades of grass.
+The spokes.
+The leaves.
+
+All of that is millions of tiny 3D ellipsoids, learned from photos.
+
+And unlike NeRF — this runs *in real time*.
+We're talking game-engine speed.
+
+This is from the original paper at SIGGRAPH ("sig-graph") 2023, by Kerbl et al. ("kerbl and colleagues") at INRIA ("in-ria").
 
 ---
 
 ## Slide 7 — Results & Real-world Examples
 
-Let's look at where this technology shows up in the real world.
+So where does this stuff actually show up?
 
-**NeRF Studio** — an open-source framework from UC Berkeley ("you-see berkeley").
-It packages many NeRF variants into one easy-to-use system:
-Nerfacto ("nerf-acto"), Instant-NGP ("instant-en-gee-pee"), Splatfacto ("splat-facto"), and more.
+**NeRF Studio** — open source, from UC Berkeley ("you-see berkeley").
+Bundles a bunch of NeRF variants into one easy framework.
+If you want to try training your own NeRF, this is probably where you'd start.
 
-**Luma AI ("loo-ma ay-eye")** — a consumer iPhone app.
-You walk around an object with your phone, upload the video,
-and get a high-quality NeRF in minutes.
-Already used in product photography and real-estate.
+**Luma AI** — consumer iPhone app.
+Walk around something with your phone, upload the video,
+get a NeRF in minutes.
+Already being used for product photography and real-estate listings.
 
-**3DGS (Kerbl et al.)** — the original paper published at SIGGRAPH 2023.
-Open-source code on GitHub ("git-hub"); it became a standard benchmark almost immediately.
+**3DGS — Kerbl et al.** — SIGGRAPH 2023, code on GitHub ("git-hub").
+Became a standard benchmark almost immediately after release.
 
-The before → ("arrow") after comparison summarizes everything:
-classical photogrammetry gives a sparse, holey point cloud that can't render novel views.
-Neural rendering gives a dense, photorealistic output from any camera position.
+And the before → ("arrow") after at the bottom tells the whole story:
+on the left, a holey point cloud that you can't really render from new angles.
+On the right, photorealistic output from anywhere.
 
 ---
 
 ## Slide 8 — Pros & Cons
 
-Let me be clear about the strengths and limitations.
+Let me be honest about the trade-offs.
 
-**Strengths:**
-- **Photorealistic quality** — perceptual metrics like PSNR ("pee-ess-en-ar") and SSIM ("ess-sim") match or exceed traditional rendering.
-- **Fully automatic** — all you need is photos. No manual modeling at all.
-- **Novel view synthesis** — see viewpoints that were never physically captured.
-- **Compact storage** — an entire NeRF scene fits in ~("approximately") 5MB ("five megabytes") of MLP weights.
+**What's great:**
 
-**Limitations:**
-- **Training time** — NeRF takes 1–8 hours; 3DGS takes ~("approximately") 30 minutes. Neither is instant.
-- **Real-time rendering** — only 3DGS achieves this; vanilla NeRF renders at roughly 1 fps ("one frame per second").
-- **Scene editing is hard** — changing an object's color, removing it, or animating it
-  requires specialized techniques far beyond vanilla training.
-  You don't get a clean mesh you can modify freely.
-- **Static scene assumption** — moving people or vehicles during capture create artifacts.
+The quality is genuinely photorealistic — perceptual metrics like PSNR ("pee-ess-en-ar") and SSIM ("ess-sim") are excellent.
+It's fully automatic — just photos.
+And NeRF packs an entire scene into ~("approximately") 5MB ("five megabytes") of network weights. That's tiny.
+
+**What's not so great:**
+
+Training time. NeRF takes one to eight hours. 3DGS is ~("approximately") 30 minutes. Neither is instant.
+
+Real-time rendering — only 3DGS gets there. Vanilla NeRF is more like one fps ("one frame per second").
+
+*Editing is really hard.*
+Want to change an object's color? Remove something? Animate it?
+You can't just grab a mesh and move vertices around.
+You need specialized techniques on top of the basic training.
+
+And both methods assume a *static scene*.
+If someone walks through the frame while you're capturing — the reconstruction breaks.
 
 ---
 
 ## Slide 9 — Current Limits & What's Next
 
-Three open challenges remain.
+Three big open problems.
 
-**Dynamic scenes** —
-Both NeRF and 3DGS assume the world is completely frozen during capture.
-A person walking through the scene breaks the reconstruction.
-Active research: D-NeRF ("dee-nerf"), 4D Gaussians ("four-dee gaussians"), and deformable Gaussian methods.
+**One — dynamic scenes.**
+Both methods assume the world is frozen while you're capturing.
+Someone walks through? Reconstruction is ruined.
+Active research: D-NeRF ("dee-nerf"), 4D Gaussians ("four-dee gaussians").
 
-**Large-scale scenes** —
-Reconstructing a city block requires tiling the scene and distributed training.
-The math doesn't scale directly to unbounded outdoor environments.
+**Two — large scale.**
+A single city block breaks the math.
+You have to tile the scene and do distributed training.
+Not easy.
 
-**Relighting** —
-The color learned by the network bakes in the original lighting conditions.
-Changing the light direction or placing the scene in a new environment
-requires explicit material decomposition — separating albedo ("al-bee-do") from lighting.
+**Three — relighting.**
+The color the network learns has the original lighting *baked in*.
+Move the scene to a different lighting environment?
+You need to separately decompose albedo ("al-bee-do") from lighting — which is hard.
 
 **What's coming:**
-- Real-time NeRF on mobile phones (Instant-NGP variants)
-- Text → ("arrow") 3D: DreamFusion ("dream-fusion"), Shap-E ("shape-ee") — no photos required, just a text prompt
-- Integration with Unreal Engine ("un-real engine") and Unity ("you-nity") — scan the real world, render in a game engine at 60fps ("sixty frames per second")
-- Applications in surgical planning, robot navigation, and cultural heritage preservation
+
+Real-time NeRF on phones.
+Text → ("arrow") 3D with DreamFusion ("dream-fusion") and Shap-E ("shape-ee") — just describe what you want.
+3DGS plugins for Unreal Engine ("un-real engine") and Unity ("you-nity").
+And applications in surgery, robotics, and cultural preservation.
 
 ---
 
 ## Closing
 
-To summarize:
+So to wrap up.
 
-Classical 3D reconstruction — even photogrammetry — couldn't produce photorealistic novel views.
-NeRF solved this for the first time in 2020 using a neural network as an implicit scene representation.
-3DGS pushed it further in 2023 by enabling real-time rendering.
+Photogrammetry got us a long way — but it couldn't give us photorealistic new viewpoints.
 
-Dynamic scenes, scene editing, and large-scale capture are still open problems —
-but this field has been moving faster than almost any other in computer graphics.
-Every year since 2020 has brought a major step forward.
+NeRF solved that in 2020, using a neural network as an implicit scene representation.
 
-I'm happy to take any questions. Thank you.
+3DGS took it further in 2023, making real-time rendering possible.
+
+There's still work to do — dynamic scenes, editing, scale —
+but this field has been moving *fast*.
+Every year since 2020 has brought something that felt impossible the year before.
+
+That's it from me. Happy to take questions. Thanks.
 
 ---
 
